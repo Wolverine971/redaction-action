@@ -1,0 +1,1 @@
+-- Baseline migration (intentionally empty). Real tables start in the next migration.
