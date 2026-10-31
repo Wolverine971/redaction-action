@@ -114,12 +114,12 @@ describe("upload → detect → review → export", () => {
 
   it("adds a missed spelling everywhere in one step", async () => {
     const batch = await createBatch("Alias test", [
-      { filename: "c.pdf", bytes: await pdf([["John Smith arrived. Later, Johnny left.", "Everyone called him Johnny."]]) },
+      { filename: "c.pdf", bytes: await pdf([["John Smith arrived. Later, Smitty left.", "Everyone called him Smitty."]]) },
     ]);
     created.push(batch.id);
     await processBatch(batch.id, llm());
     const john = (await getReview(batch.id))!.entities.find((e) => e.label === "John Smith")!;
-    const result = await applyAction(batch.id, "Dana", { type: "addAlias", entityId: john.id, alias: "Johnny" });
+    const result = await applyAction(batch.id, "Dana", { type: "addAlias", entityId: john.id, alias: "Smitty" });
     expect(result.changed).toBe(2);
   });
 

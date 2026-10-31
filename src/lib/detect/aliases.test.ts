@@ -1,5 +1,15 @@
 import { describe, expect, it } from "vitest";
-import { addressVariants, aliasKey, findAliases, isCommonWord, personKey, personVariants } from "./aliases";
+import {
+  addressVariants,
+  aliasKey,
+  compileAliases,
+  findAliases,
+  isAliasOf,
+  isCommonWord,
+  personKey,
+  personPatterns,
+  personVariants,
+} from "./aliases";
 
 describe("personVariants", () => {
   it("generates the spellings legal documents use", () => {
@@ -36,12 +46,66 @@ describe("helpers", () => {
   });
   it("normalizes keys", () => {
     expect(aliasKey("Mr. Smith's")).toBe("mr smith");
-    expect(personKey("Mr. John A. Smith Jr.")).toBe("john smith");
+    expect(personKey("Mr. John A. Smith")).toBe("john smith");
+    expect(personKey("Officer John Smith")).toBe("john smith");
+    expect(personKey("SMITH, JOHN A.")).toBe("john smith");
   });
-  it("abbreviates street names", () => {
-    expect(addressVariants("1418 Elm Street, Baltimore, MD 21201")).toEqual(
-      expect.arrayContaining(["1418 Elm Street", "1418 Elm St."]),
-    );
+  it("never merges a father and son", () => {
+    expect(personKey("John Smith Jr.")).toBe("john smith jr");
+    expect(personKey("John A. Smith, Sr.")).toBe("john smith sr");
+  });
+  it("matches street types, directions, and states spelled out or abbreviated", () => {
+    const re = (alias: string) => compileAliases([alias], { address: true });
+    const hits = (text: string, alias: string) => findAliases(text, re(alias)).map((h) => h.text);
+    expect(hits("lived at 1418 ELM ST, BALTIMORE MD 21218.", "1418 Elm Street, Baltimore, MD 21218")).toEqual(["1418 ELM ST, BALTIMORE MD 21218"]);
+    expect(hits("3306 Linden Court, Apartment 2B, Towson, Maryland 21204", "3306 Linden Ct., Apt. 2B, Towson, MD 21204")).toHaveLength(1);
+    expect(hits("100 North Calvert St.", "100 N. Calvert Street")).toEqual(["100 North Calvert St."]);
+  });
+  it("adds the house number with the bare street name", () => {
+    expect(addressVariants("1418 Elm Street, Baltimore, MD")).toEqual(expect.arrayContaining(["1418 Elm Street", "Elm Street", "1418 Elm"]));
+  });
+});
+
+describe("name forms the model may not list", () => {
+  it("uses professional titles instead of Mr./Ms. for officials", () => {
+    const v = personVariants("Officer Kevin Chen");
+    expect(v).toEqual(expect.arrayContaining(["Ofc. Chen", "Officer Chen", "Ofc. K. Chen", "Officer Kevin Chen", "K. Chen", "Chen"]));
+    expect(v).not.toContain("Ms. Chen");
+    expect(v).not.toContain("Officer");
+    // The title can come from the aliases when the label leaves it out.
+    expect(personVariants("Kevin Chen", { aliases: ["Officer Chen"] })).toContain("Ofc. Chen");
+    expect(personVariants("Hon. Patricia Alvarez")).toContain("Judge Alvarez");
+  });
+  it("adds nicknames", () => {
+    expect(personVariants("Stephen M. Smith")).toEqual(expect.arrayContaining(["Steve", "Steve Smith"]));
+    expect(personVariants("William Marsh")).toEqual(expect.arrayContaining(["Will", "Bill", "Will Marsh"]));
+    expect(personVariants("Mary Smith")).not.toContain("May");
+  });
+  it("adds dotted initials only when asked, and never ones that mean something else", () => {
+    expect(personVariants("Emily R. Smith")).not.toContain("E.S.");
+    expect(personVariants("Emily R. Smith", { initials: true })).toEqual(expect.arrayContaining(["E.S.", "E.R.S."]));
+    expect(personVariants("Linda Pruitt", { initials: true })).not.toContain("L.P.");
+    const hits = findAliases("E.S. and E. S. went; e.s. is not her; U.S. neither", compileAliases(["E.S."])).map((h) => h.text);
+    expect(hits).toEqual(["E.S.", "E. S."]);
+  });
+  it("matches middle names and initials the label doesn't have", () => {
+    const patterns = personPatterns("John Smith");
+    const hits = (text: string) => findAliases(text, patterns).map((h) => h.text);
+    expect(hits("JOHN ANDREW SMITH and John A Smith")).toEqual(["JOHN ANDREW SMITH", "John A Smith"]);
+    expect(hits("SMITH, JOHN ANDREW signed; MARSH")).toEqual(["SMITH, JOHN ANDREW"]);
+    expect(hits("John and Smith")).toEqual([]);
+  });
+  it("matches an alias given in capitals in ordinary case too, and either apostrophe", () => {
+    expect(findAliases("Johnny and JOHNNY", ["JOHNNY"]).map((h) => h.text)).toEqual(["Johnny", "JOHNNY"]);
+    expect(findAliases("Ms. O’Brien and O'BRIEN", ["O'Brien"]).map((h) => h.text)).toEqual(["O’Brien", "O'BRIEN"]);
+    expect(aliasKey("O’Brien’s")).toBe(aliasKey("O'Brien"));
+  });
+  it("tells a name form from a role phrase", () => {
+    expect(isAliasOf("the younger Mr. Smith", "Stephen M. Smith")).toBe(true);
+    expect(isAliasOf("Reporting Officer", "Kevin Chen")).toBe(false);
+    expect(isAliasOf("Courtroom Clerk to Judge Alvarez", "Andrea Ferris")).toBe(false);
+    expect(isAliasOf("SMITH, EMILY R.", "E.S.", ["Emily", "Emmy"])).toBe(true);
+    expect(isAliasOf("Johnny", "John A. Smith")).toBe(true);
   });
 });
 
@@ -75,9 +139,6 @@ describe("false-positive guards", () => {
     expect(withHonorific("Q. Mr. Smith", "Q. Mr. ".length)).toBe(3);
     expect(withHonorific("MS. CHEN", 4)).toBe(0);
     expect(withHonorific("Amr. Smith", 5)).toBe(5);
-  });
-  it("adds the bare street name for an address", () => {
-    expect(addressVariants("1418 Elm Street, Baltimore, MD")).toContain("Elm Street");
   });
 });
 

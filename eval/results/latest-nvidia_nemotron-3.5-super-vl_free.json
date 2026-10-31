@@ -1,5 +1,5 @@
 {
-  "ranAt": "2026-10-30T19:15:04.042Z",
+  "ranAt": "2026-10-31T16:05:39.263Z",
   "mode": "full",
   "model": "nvidia/nemotron-3.5-super-vl:free",
   "corpus": {
@@ -10,23 +10,16 @@
     "unlocated": 0
   },
   "recall": {
-    "caught": 373,
-    "partial": 5,
-    "missed": 2,
-    "rate": 0.9815789473684211
+    "caught": 375,
+    "partial": 4,
+    "missed": 1,
+    "rate": 0.9868421052631579
   },
-  "falsePositiveRate": 0.003875968992248062,
+  "falsePositiveRate": 0.001937984496124031,
   "attribution": {
-    "correct": 51,
+    "correct": 52,
     "total": 54,
     "wrong": [
-      {
-        "text": "Mr. Smith",
-        "file": "06-pediatric-intake-es.pdf",
-        "page": 2,
-        "expected": "John A. Smith",
-        "got": "nobody"
-      },
       {
         "text": "Mr. Smith",
         "file": "07-defense-motion-in-limine.pdf",
@@ -42,7 +35,7 @@
         "got": "nobody"
       }
     ],
-    "rate": 0.9444444444444444
+    "rate": 0.9629629629629629
   },
   "byCategory": {
     "redact:person": {
@@ -59,8 +52,8 @@
     },
     "redact:address": {
       "total": 33,
-      "caught": 29,
-      "partial": 2,
+      "caught": 31,
+      "partial": 1,
       "flagged": 0
     },
     "keep:org": {
@@ -73,7 +66,7 @@
       "total": 91,
       "caught": 0,
       "partial": 0,
-      "flagged": 1
+      "flagged": 0
     },
     "keep:decoy_word": {
       "total": 105,
@@ -107,47 +100,40 @@
     }
   },
   "caughtBySource": {
-    "llm": 275,
-    "sweep": 84,
+    "llm": 276,
+    "sweep": 85,
     "pattern": 14
   },
   "extraRedactions": {
-    "count": 3,
+    "count": 2,
     "samples": [
       "01-charging-document.pdf p.1: \"Baltimore, Maryland 21218\" (llm)",
-      "08-witness-statement-may-chen.pdf p.2: \"CHEN\" (llm)",
       "07-defense-motion-in-limine.pdf p.2: \"Smith's\" (sweep)"
     ]
   },
   "workload": {
     "entities": 53,
-    "ambiguousGroups": 19,
+    "ambiguousGroups": 15,
     "exceptions": 7,
     "lowConfidence": 1,
-    "decisions": 80,
-    "mentions": 729
+    "decisions": 76,
+    "mentions": 714
   },
   "usage": {
     "inputTokens": 0,
     "outputTokens": 0,
     "calls": 0,
-    "costUsd": 0
+    "costUsd": 0,
+    "models": {}
   },
   "costUsd": 0,
-  "seconds": 0.3,
+  "seconds": 0.4,
   "misses": [
     {
       "file": "01-charging-document.pdf",
       "page": 1,
       "text": "Darnell Price",
       "category": "person",
-      "outcome": "partial"
-    },
-    {
-      "file": "03-deposition-steve-smith.pdf",
-      "page": 4,
-      "text": "3306 Linden Court, Apartment 2B, Towson, Maryland 21204",
-      "category": "address",
       "outcome": "partial"
     },
     {
@@ -172,13 +158,6 @@
       "outcome": "partial"
     },
     {
-      "file": "09-letter-will-marsh.pdf",
-      "page": 1,
-      "text": "Dundalk, MD 21222",
-      "category": "address",
-      "outcome": "missed"
-    },
-    {
       "file": "10-scheduling-order.pdf",
       "page": 1,
       "text": "Mr. Smith",
@@ -192,12 +171,6 @@
       "page": 2,
       "text": "Smith's",
       "category": "citation"
-    },
-    {
-      "file": "08-witness-statement-may-chen.pdf",
-      "page": 2,
-      "text": "CHEN",
-      "category": "official"
     }
   ],
   "warnings": []

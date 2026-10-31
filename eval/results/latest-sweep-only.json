@@ -1,0 +1,555 @@
+{
+  "ranAt": "2026-10-31T16:03:32.080Z",
+  "mode": "sweep-only",
+  "model": "none",
+  "corpus": {
+    "documents": 10,
+    "pages": 46,
+    "redactSpans": 380,
+    "keepSpans": 516,
+    "unlocated": 0
+  },
+  "recall": {
+    "caught": 374,
+    "partial": 5,
+    "missed": 1,
+    "rate": 0.9842105263157894
+  },
+  "falsePositiveRate": 0.003875968992248062,
+  "attribution": {
+    "correct": 0,
+    "total": 54,
+    "wrong": [
+      {
+        "text": "Mr. Smith",
+        "file": "01-charging-document.pdf",
+        "page": 2,
+        "expected": "John A. Smith",
+        "got": "nobody"
+      },
+      {
+        "text": "Mr. Smith",
+        "file": "01-charging-document.pdf",
+        "page": 2,
+        "expected": "John A. Smith",
+        "got": "nobody"
+      },
+      {
+        "text": "Mr. Smith",
+        "file": "01-charging-document.pdf",
+        "page": 3,
+        "expected": "John A. Smith",
+        "got": "nobody"
+      },
+      {
+        "text": "Marsh",
+        "file": "02-police-incident-report.pdf",
+        "page": 2,
+        "expected": "William Marsh",
+        "got": "nobody"
+      },
+      {
+        "text": "Marsh",
+        "file": "02-police-incident-report.pdf",
+        "page": 2,
+        "expected": "William Marsh",
+        "got": "nobody"
+      },
+      {
+        "text": "Marsh",
+        "file": "02-police-incident-report.pdf",
+        "page": 3,
+        "expected": "William Marsh",
+        "got": "nobody"
+      },
+      {
+        "text": "SMITH's",
+        "file": "02-police-incident-report.pdf",
+        "page": 3,
+        "expected": "John A. Smith",
+        "got": "nobody"
+      },
+      {
+        "text": "Chen",
+        "file": "02-police-incident-report.pdf",
+        "page": 3,
+        "expected": "May Chen",
+        "got": "nobody"
+      },
+      {
+        "text": "Mr. Smith",
+        "file": "02-police-incident-report.pdf",
+        "page": 3,
+        "expected": "John A. Smith",
+        "got": "nobody"
+      },
+      {
+        "text": "Mr. Smith",
+        "file": "02-police-incident-report.pdf",
+        "page": 3,
+        "expected": "John A. Smith",
+        "got": "nobody"
+      },
+      {
+        "text": "Mr. Smith",
+        "file": "02-police-incident-report.pdf",
+        "page": 3,
+        "expected": "John A. Smith",
+        "got": "nobody"
+      },
+      {
+        "text": "Chen",
+        "file": "02-police-incident-report.pdf",
+        "page": 3,
+        "expected": "May Chen",
+        "got": "nobody"
+      },
+      {
+        "text": "Mr. Smith",
+        "file": "02-police-incident-report.pdf",
+        "page": 3,
+        "expected": "John A. Smith",
+        "got": "nobody"
+      },
+      {
+        "text": "SMITH's",
+        "file": "02-police-incident-report.pdf",
+        "page": 3,
+        "expected": "John A. Smith",
+        "got": "nobody"
+      },
+      {
+        "text": "SMITH",
+        "file": "02-police-incident-report.pdf",
+        "page": 3,
+        "expected": "John A. Smith",
+        "got": "nobody"
+      },
+      {
+        "text": "SMITH",
+        "file": "02-police-incident-report.pdf",
+        "page": 4,
+        "expected": "John A. Smith",
+        "got": "nobody"
+      },
+      {
+        "text": "SMITH",
+        "file": "02-police-incident-report.pdf",
+        "page": 4,
+        "expected": "John A. Smith",
+        "got": "nobody"
+      },
+      {
+        "text": "SMITH",
+        "file": "02-police-incident-report.pdf",
+        "page": 4,
+        "expected": "John A. Smith",
+        "got": "nobody"
+      },
+      {
+        "text": "Mr. Smith",
+        "file": "02-police-incident-report.pdf",
+        "page": 4,
+        "expected": "Stephen M. Smith",
+        "got": "nobody"
+      },
+      {
+        "text": "Mr. Smith",
+        "file": "03-deposition-steve-smith.pdf",
+        "page": 4,
+        "expected": "Stephen M. Smith",
+        "got": "nobody"
+      },
+      {
+        "text": "Mr. Smith",
+        "file": "03-deposition-steve-smith.pdf",
+        "page": 5,
+        "expected": "Stephen M. Smith",
+        "got": "nobody"
+      },
+      {
+        "text": "Mr. Smith",
+        "file": "03-deposition-steve-smith.pdf",
+        "page": 10,
+        "expected": "John A. Smith",
+        "got": "nobody"
+      },
+      {
+        "text": "Mr. Smith",
+        "file": "03-deposition-steve-smith.pdf",
+        "page": 12,
+        "expected": "Stephen M. Smith",
+        "got": "nobody"
+      },
+      {
+        "text": "Mr. Smith",
+        "file": "03-deposition-steve-smith.pdf",
+        "page": 13,
+        "expected": "Stephen M. Smith",
+        "got": "nobody"
+      },
+      {
+        "text": "Mr. Smith",
+        "file": "03-deposition-steve-smith.pdf",
+        "page": 13,
+        "expected": "John A. Smith",
+        "got": "nobody"
+      },
+      {
+        "text": "Mr. Smith",
+        "file": "03-deposition-steve-smith.pdf",
+        "page": 15,
+        "expected": "Stephen M. Smith",
+        "got": "nobody"
+      },
+      {
+        "text": "Mr. Smith",
+        "file": "03-deposition-steve-smith.pdf",
+        "page": 17,
+        "expected": "John A. Smith",
+        "got": "nobody"
+      },
+      {
+        "text": "Mr. Smith",
+        "file": "03-deposition-steve-smith.pdf",
+        "page": 17,
+        "expected": "Stephen M. Smith",
+        "got": "nobody"
+      },
+      {
+        "text": "Mr. Smith",
+        "file": "03-deposition-steve-smith.pdf",
+        "page": 18,
+        "expected": "Stephen M. Smith",
+        "got": "nobody"
+      },
+      {
+        "text": "Mr. Smith",
+        "file": "03-deposition-steve-smith.pdf",
+        "page": 19,
+        "expected": "Stephen M. Smith",
+        "got": "nobody"
+      },
+      {
+        "text": "Mr. Smith",
+        "file": "05-employment-records-acme.pdf",
+        "page": 3,
+        "expected": "John A. Smith",
+        "got": "nobody"
+      },
+      {
+        "text": "Mr. Smith's",
+        "file": "05-employment-records-acme.pdf",
+        "page": 3,
+        "expected": "John A. Smith",
+        "got": "nobody"
+      },
+      {
+        "text": "Smith's",
+        "file": "05-employment-records-acme.pdf",
+        "page": 3,
+        "expected": "John A. Smith",
+        "got": "nobody"
+      },
+      {
+        "text": "Mr. Smith's",
+        "file": "05-employment-records-acme.pdf",
+        "page": 3,
+        "expected": "John A. Smith",
+        "got": "nobody"
+      },
+      {
+        "text": "Mr. Smith",
+        "file": "05-employment-records-acme.pdf",
+        "page": 3,
+        "expected": "John A. Smith",
+        "got": "nobody"
+      },
+      {
+        "text": "Marsh",
+        "file": "05-employment-records-acme.pdf",
+        "page": 3,
+        "expected": "William Marsh",
+        "got": "nobody"
+      },
+      {
+        "text": "Mr. Smith",
+        "file": "06-pediatric-intake-es.pdf",
+        "page": 2,
+        "expected": "John A. Smith",
+        "got": "nobody"
+      },
+      {
+        "text": "Mr. Smith",
+        "file": "06-pediatric-intake-es.pdf",
+        "page": 2,
+        "expected": "John A. Smith",
+        "got": "nobody"
+      },
+      {
+        "text": "Mr. Smith",
+        "file": "06-pediatric-intake-es.pdf",
+        "page": 2,
+        "expected": "John A. Smith",
+        "got": "nobody"
+      },
+      {
+        "text": "Mr. Smith's",
+        "file": "07-defense-motion-in-limine.pdf",
+        "page": 1,
+        "expected": "John A. Smith",
+        "got": "nobody"
+      },
+      {
+        "text": "Mr. Smith",
+        "file": "07-defense-motion-in-limine.pdf",
+        "page": 1,
+        "expected": "John A. Smith",
+        "got": "nobody"
+      },
+      {
+        "text": "Mr. Smith",
+        "file": "07-defense-motion-in-limine.pdf",
+        "page": 1,
+        "expected": "John A. Smith",
+        "got": "nobody"
+      },
+      {
+        "text": "Mr. Smith",
+        "file": "07-defense-motion-in-limine.pdf",
+        "page": 1,
+        "expected": "John A. Smith",
+        "got": "nobody"
+      },
+      {
+        "text": "Mr. Smith",
+        "file": "07-defense-motion-in-limine.pdf",
+        "page": 2,
+        "expected": "Stephen M. Smith",
+        "got": "nobody"
+      },
+      {
+        "text": "Mr. Smith",
+        "file": "07-defense-motion-in-limine.pdf",
+        "page": 2,
+        "expected": "John A. Smith",
+        "got": "nobody"
+      },
+      {
+        "text": "Mr. Smith",
+        "file": "07-defense-motion-in-limine.pdf",
+        "page": 2,
+        "expected": "John A. Smith",
+        "got": "nobody"
+      },
+      {
+        "text": "Mr. Smith",
+        "file": "07-defense-motion-in-limine.pdf",
+        "page": 3,
+        "expected": "John A. Smith",
+        "got": "nobody"
+      },
+      {
+        "text": "Mr. Smith",
+        "file": "07-defense-motion-in-limine.pdf",
+        "page": 3,
+        "expected": "John A. Smith",
+        "got": "nobody"
+      },
+      {
+        "text": "Mr. Smith's",
+        "file": "08-witness-statement-may-chen.pdf",
+        "page": 1,
+        "expected": "John A. Smith",
+        "got": "nobody"
+      },
+      {
+        "text": "Mr. Smith",
+        "file": "08-witness-statement-may-chen.pdf",
+        "page": 1,
+        "expected": "John A. Smith",
+        "got": "nobody"
+      },
+      {
+        "text": "Mr. Smith",
+        "file": "08-witness-statement-may-chen.pdf",
+        "page": 1,
+        "expected": "John A. Smith",
+        "got": "nobody"
+      },
+      {
+        "text": "CHEN",
+        "file": "08-witness-statement-may-chen.pdf",
+        "page": 2,
+        "expected": "May Chen",
+        "got": "nobody"
+      },
+      {
+        "text": "Mr. Smith's",
+        "file": "09-letter-will-marsh.pdf",
+        "page": 1,
+        "expected": "John A. Smith",
+        "got": "nobody"
+      },
+      {
+        "text": "Mr. Smith",
+        "file": "10-scheduling-order.pdf",
+        "page": 1,
+        "expected": "Stephen M. Smith",
+        "got": "nobody"
+      }
+    ],
+    "rate": 0
+  },
+  "byCategory": {
+    "redact:person": {
+      "total": 329,
+      "caught": 325,
+      "partial": 4,
+      "flagged": 0
+    },
+    "keep:decoy_number": {
+      "total": 147,
+      "caught": 0,
+      "partial": 0,
+      "flagged": 0
+    },
+    "redact:address": {
+      "total": 33,
+      "caught": 31,
+      "partial": 1,
+      "flagged": 0
+    },
+    "keep:org": {
+      "total": 134,
+      "caught": 0,
+      "partial": 0,
+      "flagged": 0
+    },
+    "keep:official": {
+      "total": 91,
+      "caught": 0,
+      "partial": 0,
+      "flagged": 0
+    },
+    "keep:decoy_word": {
+      "total": 105,
+      "caught": 0,
+      "partial": 0,
+      "flagged": 0
+    },
+    "keep:address": {
+      "total": 26,
+      "caught": 0,
+      "partial": 0,
+      "flagged": 0
+    },
+    "redact:ssn_partial": {
+      "total": 11,
+      "caught": 11,
+      "partial": 0,
+      "flagged": 0
+    },
+    "redact:ssn": {
+      "total": 7,
+      "caught": 7,
+      "partial": 0,
+      "flagged": 0
+    },
+    "keep:citation": {
+      "total": 13,
+      "caught": 0,
+      "partial": 0,
+      "flagged": 2
+    }
+  },
+  "caughtBySource": {
+    "sweep": 360,
+    "pattern": 14
+  },
+  "extraRedactions": {
+    "count": 4,
+    "samples": [
+      "01-charging-document.pdf p.2: \"Eastern Avenue\" (sweep)",
+      "03-deposition-steve-smith.pdf p.11: \"Eastern Avenue.\" (sweep)",
+      "07-defense-motion-in-limine.pdf p.2: \"Smith\" (sweep)",
+      "07-defense-motion-in-limine.pdf p.2: \"Smith's\" (sweep)"
+    ]
+  },
+  "workload": {
+    "entities": 50,
+    "ambiguousGroups": 12,
+    "exceptions": 5,
+    "lowConfidence": 4,
+    "decisions": 71,
+    "mentions": 605
+  },
+  "usage": {
+    "inputTokens": 0,
+    "outputTokens": 0,
+    "calls": 16
+  },
+  "costUsd": 0,
+  "seconds": 0.4,
+  "misses": [
+    {
+      "file": "01-charging-document.pdf",
+      "page": 1,
+      "text": "Darnell Price",
+      "category": "person",
+      "outcome": "partial"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 5,
+      "text": "Emily Rose",
+      "category": "person",
+      "outcome": "partial"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 5,
+      "text": "the Elm Street house",
+      "category": "address",
+      "outcome": "partial"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 8,
+      "text": "Elm",
+      "category": "address",
+      "outcome": "missed"
+    },
+    {
+      "file": "07-defense-motion-in-limine.pdf",
+      "page": 1,
+      "text": "Mr. Smith",
+      "category": "person",
+      "outcome": "partial"
+    },
+    {
+      "file": "10-scheduling-order.pdf",
+      "page": 1,
+      "text": "Mr. Smith",
+      "category": "person",
+      "outcome": "partial"
+    }
+  ],
+  "falsePositives": [
+    {
+      "file": "07-defense-motion-in-limine.pdf",
+      "page": 2,
+      "text": "Smith, 512 U.S. at 224",
+      "category": "citation"
+    },
+    {
+      "file": "07-defense-motion-in-limine.pdf",
+      "page": 2,
+      "text": "Smith's",
+      "category": "citation"
+    }
+  ],
+  "warnings": [
+    "The AI scan came back empty, so only Social Security number patterns were found. Re-run detection to try again."
+  ]
+}

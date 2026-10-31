@@ -4,6 +4,7 @@
  *   pnpm eval                  # full pipeline (needs OPENROUTER_API_KEY; REDACTION_MODEL picks the model)
  *   pnpm eval --model google/gemini-3.8-flash   # try any OpenRouter model
  *   pnpm eval --patterns-only  # no model: SSN patterns only (baseline)
+ *   pnpm eval --sweep-only     # no model: names from the answer key, no aliases. What spelling search alone finds.
  *   pnpm eval --fresh          # ignore cached model answers and call the model again
  *
  * Model answers are cached per model and per exact input, so after a code change only calls whose
@@ -16,6 +17,7 @@ import path from "node:path";
 import nextEnv from "@next/env";
 import { createHash } from "node:crypto";
 import { OpenRouterDetector, type DetectorLLM, type Usage } from "../src/lib/detect/llm";
+import { FakeLLM } from "../src/lib/detect/fake-llm";
 import { detect, type DetectionResult, type DraftMention, type InputDocument } from "../src/lib/detect/pipeline";
 import { effectiveDecision } from "../src/lib/decisions";
 import { extractPdf } from "../src/lib/pdf/extract";
@@ -53,11 +55,28 @@ const docs: InputDocument[] = truth.documents.map((d) => {
 const pages = docs.reduce((n, d) => n + new Set(d.blocks.map((b) => b.page)).size, 0);
 
 // 2. Detect (or reuse a saved run).
-const mode = args.has("--patterns-only") ? "patterns-only" : "full";
+const mode = args.has("--patterns-only") ? "patterns-only" : args.has("--sweep-only") ? "sweep-only" : "full";
 const live = mode === "full" ? new OpenRouterDetector({ model: modelArg }) : null;
 const model = live?.model ?? "none";
 const slug = model.replace(/[^\w.-]+/g, "_");
-const llm = live ? cached(live, path.join(RESULTS, `llm-cache-${slug}.json`), args.has("--fresh")) : null;
+const llm =
+  mode === "sweep-only"
+    ? namesOnly()
+    : live
+      ? cached(live, path.join(RESULTS, `llm-cache-${slug}.json`), args.has("--fresh"))
+      : null;
+
+/**
+ * A stand-in model that knows who's who (the answer key's canonical names and redact calls) but lists no
+ * other spellings and finds no mentions. Everything caught for names and addresses is the sweep's work:
+ * the score shows how far generated spellings get on their own, and catches regressions in aliases.ts.
+ */
+function namesOnly(): DetectorLLM {
+  const cast = truth.entities
+    .filter((e) => e.type !== "ssn")
+    .map((e) => ({ id: e.id, type: e.type as "person" | "address" | "org", name: e.canonical, aliases: [], role: e.id, redact: e.redact, why: "" }));
+  return new FakeLLM(cast);
+}
 
 /** Wraps the model so identical inputs replay the saved answer instead of calling the API. */
 function cached(inner: DetectorLLM, file: string, fresh: boolean): DetectorLLM & { hits: number } {
@@ -303,6 +322,12 @@ for (const [k, n] of [...sources].sort((a, b) => b[1] - a[1])) line(`    ${k}`, 
 console.log("\n  Reviewer workload");
 line("    Decisions to clear the batch", `${report.workload.decisions} (for ${result.mentions.length} mentions)`);
 if (result.usage) line("\n  Model usage", `${result.usage.calls} calls, ${result.usage.inputTokens} in / ${result.usage.outputTokens} out, ~$${cost.toFixed(2)}, ${seconds.toFixed(0)}s`);
+// Fallbacks keep the app running, but a score that mixes models isn't a score for the first one.
+const answeredBy = Object.entries(result.usage?.models ?? {});
+if (answeredBy.some(([m]) => m !== model)) {
+  line("  ⚠ Answered by", answeredBy.map(([m, n]) => `${m} ×${n}`).join(", "));
+  console.log("    A fallback model stepped in, so this score mixes models. Pin one with --model to compare models.");
+}
 if (misses.length) {
   console.log("\n  Misses");
   for (const m of misses.slice(0, 30)) console.log(`    ${m.outcome.padEnd(8)}${m.category.padEnd(14)}${m.file} p.${m.page}  "${m.text}"`);
@@ -317,5 +342,5 @@ if (attribution.wrong.length) {
   for (const w of attribution.wrong.slice(0, 15)) console.log(`    "${w.text}" ${w.file} p.${w.page}: expected ${w.expected}, got ${w.got}`);
 }
 if (unlocated) console.log(`\n  ⚠ ${unlocated} answer-key spans couldn't be located in the extracted text (corpus/extractor mismatch).`);
-for (const w of result.warnings) console.log(`\n  ⚠ ${w}`);
+for (const w of result.warnings) if (mode !== "sweep-only") console.log(`\n  ⚠ ${w}`);
 console.log(`\nSaved ${path.relative(process.cwd(), path.join(RESULTS, `latest-${label}.json`))}`);

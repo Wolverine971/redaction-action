@@ -4,11 +4,13 @@ import {
   aliasKey,
   compileAliases,
   findAliases,
+  isAliasOf,
   isCommonWord,
   isNameInContext,
   isPartOfOtherName,
   isSearchableAlias,
   personKey,
+  personPatterns,
   personVariants,
   withHonorific,
   withPossessive,
@@ -379,6 +381,7 @@ export async function detect(
   const used = new Set(mentions.flatMap((m) => [m.entityKey, ...m.candidateKeys]));
   for (const key of [...entities.keys()]) if (!used.has(key)) entities.delete(key);
   const finalEntities = [...entities.values()];
+  if (llm) warnings.push(...(llm.notices?.() ?? []));
   await stage("done", "Done");
   return { entities: finalEntities, mentions, usage: llm?.usage() ?? null, warnings };
 }
@@ -639,33 +642,50 @@ function sweep(
   // (e.g. "Mr. Smith" for a father and son) both land in the index; those matches become ambiguous.
   const index = new Map<string, Set<string>>();
   const sweepable = (e: DraftEntity) => e.type !== "ssn" && !(e.origin === "scan" && e.suggestion === "keep");
+  const sweepables = [...entities.values()].filter(sweepable);
+  // Initials ("E.S.") only for people being redacted: that's how minors are usually named, and it keeps
+  // a kept official's initials from claiming text.
+  const variantsOf = (e: DraftEntity) =>
+    e.type === "person"
+      ? personVariants(e.label, { initials: e.suggestion === "redact", aliases: e.aliases })
+      : e.type === "address"
+        ? addressVariants(e.label)
+        : [];
+  const usable = (e: DraftEntity, alias: string) => isSearchableAlias(alias) && (e.type !== "person" || isAliasOf(alias, e.label, e.aliases));
   // First names or surnames that are also ordinary words ("Will", "Price"). Searched separately, with a context check.
   const commonAliases = new Map<string, Set<string>>();
-  for (const e of entities.values()) {
-    if (e.type !== "person" || !sweepable(e) || e.suggestion !== "redact") continue;
-    for (const a of [...e.aliases, ...personVariants(e.label)]) {
+  for (const e of sweepables) {
+    if (e.type !== "person" || e.suggestion !== "redact") continue;
+    for (const a of [...e.aliases, ...variantsOf(e)]) {
       if (isCommonWord(a)) commonAliases.set(a.trim(), (commonAliases.get(a.trim()) ?? new Set()).add(e.key));
     }
   }
 
-  for (const e of entities.values()) {
-    if (!sweepable(e)) continue;
-    const generated = e.type === "person" ? personVariants(e.label) : e.type === "address" ? addressVariants(e.label) : [];
-    const aliases = [...new Set([...e.aliases, ...generated])].filter(isSearchableAlias);
+  // Aliases the model gave (or a reviewer added) are kept; generated ones are kept only if they turn up in the text.
+  const given = new Map(sweepables.map((e) => [e.key, new Set(e.aliases.map(aliasKey))]));
+  const seen = new Set<string>();
+  for (const e of sweepables) {
+    const aliases = [...new Set([...e.aliases, ...variantsOf(e)])].filter((a) => usable(e, a));
     for (const a of aliases) {
       const k = aliasKey(a);
       if (!k) continue;
       index.set(k, (index.get(k) ?? new Set()).add(e.key));
     }
-    e.aliases = [...new Set([...e.aliases.filter(isSearchableAlias), ...aliases])];
+    e.aliases = aliases;
   }
-  const aliasList = compileAliases([...new Set([...entities.values()].filter(sweepable).flatMap((e) => e.aliases))]);
+  const aliasesOf = (keep: (e: DraftEntity) => boolean) => [...new Set(sweepables.filter(keep).flatMap((e) => e.aliases))];
+  const aliasList = [
+    ...compileAliases(aliasesOf((e) => e.type !== "address")),
+    ...compileAliases(aliasesOf((e) => e.type === "address"), { address: true }),
+    ...sweepables.filter((e) => e.type === "person").flatMap((e) => personPatterns(e.label)),
+  ];
   const commonList = compileAliases([...commonAliases.keys()]);
 
   for (const loc of blockIndex.values()) {
     const text = loc.block.text;
     const citations = findCaseCitations(text);
     for (const match of findAliases(text, aliasList)) {
+      seen.add(aliasKey(match.alias)).add(aliasKey(match.text));
       const keys = [...(index.get(aliasKey(match.text)) ?? index.get(aliasKey(match.alias)) ?? [])];
       if (keys.length === 0) continue;
       const fullName = match.text.trim().split(/\s+/).length >= 2;
@@ -688,6 +708,7 @@ function sweep(
     }
 
     for (const match of findAliases(text, commonList)) {
+      seen.add(aliasKey(match.alias));
       if (!isNameInContext(text, match.start, match.end) || isPartOfOtherName(text, match.start, match.end)) continue;
       const keys = [...(commonAliases.get(match.alias.trim()) ?? [])];
       addMention({
@@ -742,6 +763,11 @@ function sweep(
         });
       }
     }
+  }
+  for (const e of sweepables) {
+    const mine = given.get(e.key)!;
+    e.aliases = e.aliases.filter((a) => mine.has(aliasKey(a)) || seen.has(aliasKey(a)));
+    if (e.aliases.length === 0) e.aliases = [e.label];
   }
   void mentions;
 }
