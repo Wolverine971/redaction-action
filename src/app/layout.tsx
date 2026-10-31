@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Redaction Action",
-  description: "Document ingestion and review",
+  description: "Find, review, and redact names, addresses, and Social Security numbers across a batch of PDFs.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

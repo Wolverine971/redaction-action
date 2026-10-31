@@ -2,6 +2,7 @@
   "name": "redaction-action",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -10,16 +11,23 @@
     "typecheck": "next typegen && tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
+    "eval": "tsx scripts/eval.mts",
+    "corpus": "tsx scripts/generate-corpus.mts && tsx scripts/verify-corpus.mts",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
-    "db:studio": "drizzle-kit studio"
+    "db:studio": "drizzle-kit studio",
+    "estimate:replay": "tsx scripts/estimate-replay.mts"
   },
   "dependencies": {
     "drizzle-orm": "^0.45.4",
+    "fflate": "0.8.2",
+    "mupdf": "1.28.1",
     "next": "16.4.3",
+    "pdf-lib": "1.17.1",
     "postgres": "^3.4.9",
     "react": "19.3.0",
-    "react-dom": "19.3.0"
+    "react-dom": "19.3.0",
+    "zod": "4.6.7"
   },
   "devDependencies": {
     "@next/env": "^16.4.3",
@@ -31,6 +39,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.4.3",
     "tailwindcss": "^4",
+    "tsx": "4.23.15",
     "typescript": "^5",
     "vitest": "^5.0.5"
   },

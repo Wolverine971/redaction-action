@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f6f5f2;
+  --foreground: #1c1b19;
 }
 
 @theme inline {
@@ -10,17 +10,41 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-ink: #141414;
+  --color-paper: #ffffff;
+  --color-line: #e3e0d9;
+  --color-muted: #6f6b63;
+  --color-redact: #141414;
+  --color-pending: #d97706;
+  --color-keep: #059669;
+  --color-focus: #2563eb;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
 }
+
+@keyframes focus-pulse {
+  0%, 100% { box-shadow: 0 0 0 3px rgb(37 99 235 / 0.9), 0 0 0 7px rgb(37 99 235 / 0.25); }
+  50% { box-shadow: 0 0 0 3px rgb(37 99 235 / 0.9), 0 0 0 11px rgb(37 99 235 / 0.1); }
+}
+.focus-pulse { animation: focus-pulse 1.4s ease-in-out infinite; }
+
+kbd {
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 0.7rem;
+  border: 1px solid var(--color-line);
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  padding: 0 4px;
+  background: white;
+}
+
+/* New finds slide into the live feed. */
+@keyframes feed-in {
+  from { opacity: 0; transform: translateY(-4px); background: rgb(251 191 36 / 0.25); }
+  to { opacity: 1; transform: none; background: transparent; }
+}
+.feed-in { animation: feed-in 0.9s ease-out; }

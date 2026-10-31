@@ -1,0 +1,2646 @@
+{
+  "ranAt": "2026-10-30T16:47:44.373Z",
+  "mode": "full",
+  "model": "google/gemma-4-31b-it:free",
+  "corpus": {
+    "documents": 10,
+    "pages": 46,
+    "redactSpans": 380,
+    "keepSpans": 516,
+    "unlocated": 0
+  },
+  "recall": {
+    "caught": 18,
+    "partial": 0,
+    "missed": 362,
+    "rate": 0.04736842105263158
+  },
+  "falsePositiveRate": 0,
+  "attribution": {
+    "correct": 0,
+    "total": 0,
+    "wrong": [],
+    "rate": null
+  },
+  "byCategory": {
+    "redact:person": {
+      "total": 329,
+      "caught": 0,
+      "partial": 0,
+      "flagged": 0
+    },
+    "keep:decoy_number": {
+      "total": 147,
+      "caught": 0,
+      "partial": 0,
+      "flagged": 0
+    },
+    "redact:address": {
+      "total": 33,
+      "caught": 0,
+      "partial": 0,
+      "flagged": 0
+    },
+    "keep:org": {
+      "total": 134,
+      "caught": 0,
+      "partial": 0,
+      "flagged": 0
+    },
+    "keep:official": {
+      "total": 91,
+      "caught": 0,
+      "partial": 0,
+      "flagged": 0
+    },
+    "keep:decoy_word": {
+      "total": 105,
+      "caught": 0,
+      "partial": 0,
+      "flagged": 0
+    },
+    "keep:address": {
+      "total": 26,
+      "caught": 0,
+      "partial": 0,
+      "flagged": 0
+    },
+    "redact:ssn_partial": {
+      "total": 11,
+      "caught": 11,
+      "partial": 0,
+      "flagged": 0
+    },
+    "redact:ssn": {
+      "total": 7,
+      "caught": 7,
+      "partial": 0,
+      "flagged": 0
+    },
+    "keep:citation": {
+      "total": 13,
+      "caught": 0,
+      "partial": 0,
+      "flagged": 0
+    }
+  },
+  "caughtBySource": {
+    "pattern": 14,
+    "sweep": 4
+  },
+  "extraRedactions": {
+    "count": 0,
+    "samples": []
+  },
+  "workload": {
+    "entities": 6,
+    "ambiguousGroups": 0,
+    "exceptions": 2,
+    "lowConfidence": 4,
+    "decisions": 12,
+    "mentions": 20
+  },
+  "usage": null,
+  "costUsd": 0,
+  "seconds": 177,
+  "misses": [
+    {
+      "file": "01-charging-document.pdf",
+      "page": 1,
+      "text": "John A. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "01-charging-document.pdf",
+      "page": 1,
+      "text": "JOHN ANDREW SMITH",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "01-charging-document.pdf",
+      "page": 1,
+      "text": "1418 Elm Street",
+      "category": "address",
+      "outcome": "missed"
+    },
+    {
+      "file": "01-charging-document.pdf",
+      "page": 1,
+      "text": "John Andrew Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "01-charging-document.pdf",
+      "page": 1,
+      "text": "1418 Elm Street, Baltimore, Maryland 21218",
+      "category": "address",
+      "outcome": "missed"
+    },
+    {
+      "file": "01-charging-document.pdf",
+      "page": 1,
+      "text": "John Andrew Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "01-charging-document.pdf",
+      "page": 1,
+      "text": "John Andrew Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "01-charging-document.pdf",
+      "page": 1,
+      "text": "Darnell Price",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "01-charging-document.pdf",
+      "page": 1,
+      "text": "John Andrew Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "01-charging-document.pdf",
+      "page": 2,
+      "text": "John A. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "01-charging-document.pdf",
+      "page": 2,
+      "text": "Mr. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "01-charging-document.pdf",
+      "page": 2,
+      "text": "Mr. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "01-charging-document.pdf",
+      "page": 2,
+      "text": "John A. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "01-charging-document.pdf",
+      "page": 2,
+      "text": "1418 Elm Street",
+      "category": "address",
+      "outcome": "missed"
+    },
+    {
+      "file": "01-charging-document.pdf",
+      "page": 2,
+      "text": "Mary E. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "01-charging-document.pdf",
+      "page": 2,
+      "text": "Rosa Delgado",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "01-charging-document.pdf",
+      "page": 2,
+      "text": "William Marsh",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "01-charging-document.pdf",
+      "page": 2,
+      "text": "Mr. Marsh",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "01-charging-document.pdf",
+      "page": 2,
+      "text": "Will",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "01-charging-document.pdf",
+      "page": 2,
+      "text": "Darnell Price",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "01-charging-document.pdf",
+      "page": 3,
+      "text": "John A. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "01-charging-document.pdf",
+      "page": 3,
+      "text": "Mr. Price",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "01-charging-document.pdf",
+      "page": 3,
+      "text": "Mr. Price",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "01-charging-document.pdf",
+      "page": 3,
+      "text": "Mr. Price",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "01-charging-document.pdf",
+      "page": 3,
+      "text": "May Chen",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "01-charging-document.pdf",
+      "page": 3,
+      "text": "1420 Elm Street",
+      "category": "address",
+      "outcome": "missed"
+    },
+    {
+      "file": "01-charging-document.pdf",
+      "page": 3,
+      "text": "Mr. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "01-charging-document.pdf",
+      "page": 3,
+      "text": "Elm Street",
+      "category": "address",
+      "outcome": "missed"
+    },
+    {
+      "file": "01-charging-document.pdf",
+      "page": 3,
+      "text": "E.S.",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "01-charging-document.pdf",
+      "page": 3,
+      "text": "Stephen M. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "02-police-incident-report.pdf",
+      "page": 1,
+      "text": "PRICE, DARNELL T.",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "02-police-incident-report.pdf",
+      "page": 1,
+      "text": "617 Pelham Avenue, Baltimore, MD 21213",
+      "category": "address",
+      "outcome": "missed"
+    },
+    {
+      "file": "02-police-incident-report.pdf",
+      "page": 1,
+      "text": "MARSH, WILLIAM J.",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "02-police-incident-report.pdf",
+      "page": 1,
+      "text": "Darnell Price",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "02-police-incident-report.pdf",
+      "page": 1,
+      "text": "Mr. Price",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "02-police-incident-report.pdf",
+      "page": 2,
+      "text": "Mr. Price",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "02-police-incident-report.pdf",
+      "page": 2,
+      "text": "Price",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "02-police-incident-report.pdf",
+      "page": 2,
+      "text": "Price",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "02-police-incident-report.pdf",
+      "page": 2,
+      "text": "Price",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "02-police-incident-report.pdf",
+      "page": 2,
+      "text": "Price",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "02-police-incident-report.pdf",
+      "page": 2,
+      "text": "Price",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "02-police-incident-report.pdf",
+      "page": 2,
+      "text": "Mr. Price",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "02-police-incident-report.pdf",
+      "page": 2,
+      "text": "William Marsh",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "02-police-incident-report.pdf",
+      "page": 2,
+      "text": "Mr. Marsh",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "02-police-incident-report.pdf",
+      "page": 2,
+      "text": "Marsh",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "02-police-incident-report.pdf",
+      "page": 2,
+      "text": "Mr. Marsh",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "02-police-incident-report.pdf",
+      "page": 2,
+      "text": "Marsh",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "02-police-incident-report.pdf",
+      "page": 3,
+      "text": "SMITH, JOHN ANDREW",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "02-police-incident-report.pdf",
+      "page": 3,
+      "text": "1418 Elm Street, Baltimore, MD 21218",
+      "category": "address",
+      "outcome": "missed"
+    },
+    {
+      "file": "02-police-incident-report.pdf",
+      "page": 3,
+      "text": "John A. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "02-police-incident-report.pdf",
+      "page": 3,
+      "text": "Mary E. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "02-police-incident-report.pdf",
+      "page": 3,
+      "text": "Darnell Price",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "02-police-incident-report.pdf",
+      "page": 3,
+      "text": "Mr. Price",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "02-police-incident-report.pdf",
+      "page": 3,
+      "text": "John A. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "02-police-incident-report.pdf",
+      "page": 3,
+      "text": "Marsh",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "02-police-incident-report.pdf",
+      "page": 3,
+      "text": "SMITH's",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "02-police-incident-report.pdf",
+      "page": 3,
+      "text": "May Chen",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "02-police-incident-report.pdf",
+      "page": 3,
+      "text": "1420 Elm Street",
+      "category": "address",
+      "outcome": "missed"
+    },
+    {
+      "file": "02-police-incident-report.pdf",
+      "page": 3,
+      "text": "Ms. Chen",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "02-police-incident-report.pdf",
+      "page": 3,
+      "text": "Chen",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "02-police-incident-report.pdf",
+      "page": 3,
+      "text": "Mr. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "02-police-incident-report.pdf",
+      "page": 3,
+      "text": "1418 Elm Street",
+      "category": "address",
+      "outcome": "missed"
+    },
+    {
+      "file": "02-police-incident-report.pdf",
+      "page": 3,
+      "text": "Mr. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "02-police-incident-report.pdf",
+      "page": 3,
+      "text": "Mr. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "02-police-incident-report.pdf",
+      "page": 3,
+      "text": "Chen",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "02-police-incident-report.pdf",
+      "page": 3,
+      "text": "John",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "02-police-incident-report.pdf",
+      "page": 3,
+      "text": "Steve",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "02-police-incident-report.pdf",
+      "page": 3,
+      "text": "Rosa Delgado",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "02-police-incident-report.pdf",
+      "page": 3,
+      "text": "Ms. Delgado",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "02-police-incident-report.pdf",
+      "page": 3,
+      "text": "Mr. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "02-police-incident-report.pdf",
+      "page": 3,
+      "text": "Delgado",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "02-police-incident-report.pdf",
+      "page": 3,
+      "text": "SMITH's",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "02-police-incident-report.pdf",
+      "page": 3,
+      "text": "John A. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "02-police-incident-report.pdf",
+      "page": 3,
+      "text": "SMITH",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "02-police-incident-report.pdf",
+      "page": 3,
+      "text": "E.S.",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "02-police-incident-report.pdf",
+      "page": 4,
+      "text": "SMITH",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "02-police-incident-report.pdf",
+      "page": 4,
+      "text": "Stephen M. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "02-police-incident-report.pdf",
+      "page": 4,
+      "text": "Emmy's",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "02-police-incident-report.pdf",
+      "page": 4,
+      "text": "SMITH",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "02-police-incident-report.pdf",
+      "page": 4,
+      "text": "SMITH",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "02-police-incident-report.pdf",
+      "page": 4,
+      "text": "Stephen M. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "02-police-incident-report.pdf",
+      "page": 4,
+      "text": "3306 Linden Court, Apt. 2B, Towson, MD 21204",
+      "category": "address",
+      "outcome": "missed"
+    },
+    {
+      "file": "02-police-incident-report.pdf",
+      "page": 4,
+      "text": "Steve Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "02-police-incident-report.pdf",
+      "page": 4,
+      "text": "Mr. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "02-police-incident-report.pdf",
+      "page": 4,
+      "text": "Mary Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "02-police-incident-report.pdf",
+      "page": 4,
+      "text": "E.S.",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "02-police-incident-report.pdf",
+      "page": 4,
+      "text": "Mrs. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 1,
+      "text": "Stephen M. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 1,
+      "text": "JOHN A. SMITH",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 1,
+      "text": "STEPHEN MICHAEL SMITH",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 2,
+      "text": "Stephen M. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 2,
+      "text": "John A. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 3,
+      "text": "Stephen M. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 3,
+      "text": "STEPHEN MICHAEL SMITH",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 4,
+      "text": "Stephen M. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 4,
+      "text": "John Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 4,
+      "text": "STEPHEN MICHAEL SMITH",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 4,
+      "text": "Stephen Michael Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 4,
+      "text": "3306 Linden Court, Apartment 2B, Towson, Maryland 21204",
+      "category": "address",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 4,
+      "text": "Mr. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 4,
+      "text": "John Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 5,
+      "text": "Stephen M. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 5,
+      "text": "Mary Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 5,
+      "text": "Mary Elizabeth Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 5,
+      "text": "1418 Elm Street",
+      "category": "address",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 5,
+      "text": "Emily",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 5,
+      "text": "Emily Rose",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 5,
+      "text": "E.S.",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 5,
+      "text": "E.S.",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 5,
+      "text": "Mr. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 5,
+      "text": "E.S.",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 5,
+      "text": "Kara Delaney",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 5,
+      "text": "E.S.",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 5,
+      "text": "Kara",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 5,
+      "text": "the Elm Street house",
+      "category": "address",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 5,
+      "text": "E.S.",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 6,
+      "text": "Stephen M. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 6,
+      "text": "Will Marsh",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 6,
+      "text": "Will",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 6,
+      "text": "Will",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 6,
+      "text": "William Marsh",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 6,
+      "text": "Will",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 6,
+      "text": "Mr. Marsh",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 6,
+      "text": "Mr. Marsh",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 6,
+      "text": "Will",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 6,
+      "text": "Will",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 6,
+      "text": "Mr. Marsh",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 6,
+      "text": "Will",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 6,
+      "text": "Johnny",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 6,
+      "text": "Will",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 6,
+      "text": "John",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 7,
+      "text": "Stephen M. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 7,
+      "text": "Darnell Price",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 7,
+      "text": "Darnell",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 7,
+      "text": "Mr. Price",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 7,
+      "text": "E.S.",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 7,
+      "text": "E.S.",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 8,
+      "text": "Stephen M. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 8,
+      "text": "Mrs. Chen's",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 8,
+      "text": "Mrs. Chen",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 8,
+      "text": "May Chen",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 8,
+      "text": "1420 Elm",
+      "category": "address",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 8,
+      "text": "Elm",
+      "category": "address",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 8,
+      "text": "E.S.",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 9,
+      "text": "Stephen M. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 9,
+      "text": "Kara",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 9,
+      "text": "1418 Elm Street",
+      "category": "address",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 9,
+      "text": "E.S.",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 10,
+      "text": "Stephen M. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 10,
+      "text": "Mrs. Chen's",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 10,
+      "text": "Mr. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 11,
+      "text": "Stephen M. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 11,
+      "text": "E.S.",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 11,
+      "text": "Rosa Delgado",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 11,
+      "text": "John A. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 12,
+      "text": "Stephen M. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 12,
+      "text": "Mr. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 13,
+      "text": "Stephen M. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 13,
+      "text": "May Chen",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 13,
+      "text": "E.S.",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 13,
+      "text": "Mr. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 13,
+      "text": "Mr. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 13,
+      "text": "Kara",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 14,
+      "text": "Stephen M. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 14,
+      "text": "Ms. Delaney",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 14,
+      "text": "E.S.",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 14,
+      "text": "E.S.",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 15,
+      "text": "Stephen M. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 15,
+      "text": "Mr. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 15,
+      "text": "Mr. Price",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 15,
+      "text": "Darnell",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 16,
+      "text": "Stephen M. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 16,
+      "text": "Mr. Price",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 16,
+      "text": "Mary E. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 16,
+      "text": "Mr. Marsh",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 16,
+      "text": "Will Marsh",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 16,
+      "text": "Will",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 16,
+      "text": "Mr. Marsh",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 16,
+      "text": "Johnny",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 17,
+      "text": "Stephen M. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 17,
+      "text": "Mr. Marsh",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 17,
+      "text": "Mr. Marsh",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 17,
+      "text": "Ms. Chen",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 17,
+      "text": "May Chen",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 17,
+      "text": "Ms. Chen",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 17,
+      "text": "Ms. Chen",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 17,
+      "text": "Mr. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 17,
+      "text": "Elm Street",
+      "category": "address",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 17,
+      "text": "Mr. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 18,
+      "text": "Stephen M. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 18,
+      "text": "Darnell Price",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 18,
+      "text": "Darnell",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 18,
+      "text": "Mr. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 18,
+      "text": "Ms. Delaney",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 18,
+      "text": "E.S.",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 18,
+      "text": "E.S.",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 19,
+      "text": "Stephen M. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 19,
+      "text": "Mr. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 19,
+      "text": "E.S.",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 20,
+      "text": "Stephen M. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 20,
+      "text": "Stephen Michael Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 20,
+      "text": "STEPHEN MICHAEL SMITH",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 21,
+      "text": "Stephen M. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 21,
+      "text": "STEPHEN MICHAEL SMITH",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "04-bank-subpoena-response.pdf",
+      "page": 1,
+      "text": "John A. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "04-bank-subpoena-response.pdf",
+      "page": 1,
+      "text": "John A. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "04-bank-subpoena-response.pdf",
+      "page": 1,
+      "text": "John A. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "04-bank-subpoena-response.pdf",
+      "page": 1,
+      "text": "1418 Elm Street, Baltimore, MD 21218",
+      "category": "address",
+      "outcome": "missed"
+    },
+    {
+      "file": "04-bank-subpoena-response.pdf",
+      "page": 1,
+      "text": "Mary E. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "04-bank-subpoena-response.pdf",
+      "page": 1,
+      "text": "John Andrew Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "04-bank-subpoena-response.pdf",
+      "page": 1,
+      "text": "Rosa Delgado",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "04-bank-subpoena-response.pdf",
+      "page": 1,
+      "text": "J. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "04-bank-subpoena-response.pdf",
+      "page": 2,
+      "text": "JOHN A SMITH",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "04-bank-subpoena-response.pdf",
+      "page": 2,
+      "text": "1418 ELM ST, BALTIMORE MD 21218",
+      "category": "address",
+      "outcome": "missed"
+    },
+    {
+      "file": "04-bank-subpoena-response.pdf",
+      "page": 2,
+      "text": "R. Delgado",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "05-employment-records-acme.pdf",
+      "page": 1,
+      "text": "SMITH, JOHN A.",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "05-employment-records-acme.pdf",
+      "page": 1,
+      "text": "1418 Elm Street, Baltimore, MD 21218",
+      "category": "address",
+      "outcome": "missed"
+    },
+    {
+      "file": "05-employment-records-acme.pdf",
+      "page": 1,
+      "text": "Mary E. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "05-employment-records-acme.pdf",
+      "page": 1,
+      "text": "E.S.",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "05-employment-records-acme.pdf",
+      "page": 1,
+      "text": "Stephen M. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "05-employment-records-acme.pdf",
+      "page": 1,
+      "text": "Kara Delaney",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "05-employment-records-acme.pdf",
+      "page": 1,
+      "text": "SMITH, STEPHEN M.",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "05-employment-records-acme.pdf",
+      "page": 1,
+      "text": "W. Marsh",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "05-employment-records-acme.pdf",
+      "page": 2,
+      "text": "John A Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "05-employment-records-acme.pdf",
+      "page": 2,
+      "text": "1418 Elm St, Baltimore MD 21218",
+      "category": "address",
+      "outcome": "missed"
+    },
+    {
+      "file": "05-employment-records-acme.pdf",
+      "page": 2,
+      "text": "MARSH, W.",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "05-employment-records-acme.pdf",
+      "page": 3,
+      "text": "J. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "05-employment-records-acme.pdf",
+      "page": 3,
+      "text": "Linda Pruitt",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "05-employment-records-acme.pdf",
+      "page": 3,
+      "text": "William Marsh",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "05-employment-records-acme.pdf",
+      "page": 3,
+      "text": "William Marsh",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "05-employment-records-acme.pdf",
+      "page": 3,
+      "text": "John Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "05-employment-records-acme.pdf",
+      "page": 3,
+      "text": "Mr. Marsh",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "05-employment-records-acme.pdf",
+      "page": 3,
+      "text": "Mr. Marsh",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "05-employment-records-acme.pdf",
+      "page": 3,
+      "text": "Will",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "05-employment-records-acme.pdf",
+      "page": 3,
+      "text": "Mr. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "05-employment-records-acme.pdf",
+      "page": 3,
+      "text": "J. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "05-employment-records-acme.pdf",
+      "page": 3,
+      "text": "1418 Elm Street",
+      "category": "address",
+      "outcome": "missed"
+    },
+    {
+      "file": "05-employment-records-acme.pdf",
+      "page": 3,
+      "text": "Mr. Smith's",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "05-employment-records-acme.pdf",
+      "page": 3,
+      "text": "Smith's",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "05-employment-records-acme.pdf",
+      "page": 3,
+      "text": "Mr. Smith's",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "05-employment-records-acme.pdf",
+      "page": 3,
+      "text": "Darnell Price",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "05-employment-records-acme.pdf",
+      "page": 3,
+      "text": "Mr. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "05-employment-records-acme.pdf",
+      "page": 3,
+      "text": "Johnny",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "05-employment-records-acme.pdf",
+      "page": 3,
+      "text": "Mr. Marsh",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "05-employment-records-acme.pdf",
+      "page": 3,
+      "text": "Marsh",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "05-employment-records-acme.pdf",
+      "page": 3,
+      "text": "Linda Pruitt",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "05-employment-records-acme.pdf",
+      "page": 3,
+      "text": "Linda Pruitt",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "06-pediatric-intake-es.pdf",
+      "page": 1,
+      "text": "SMITH, EMILY R.",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "06-pediatric-intake-es.pdf",
+      "page": 1,
+      "text": "Emmy",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "06-pediatric-intake-es.pdf",
+      "page": 1,
+      "text": "1418 Elm Street, Baltimore, MD 21218",
+      "category": "address",
+      "outcome": "missed"
+    },
+    {
+      "file": "06-pediatric-intake-es.pdf",
+      "page": 1,
+      "text": "John A. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "06-pediatric-intake-es.pdf",
+      "page": 1,
+      "text": "Kara Delaney",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "06-pediatric-intake-es.pdf",
+      "page": 1,
+      "text": "SMITH, STEPHEN M.",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "06-pediatric-intake-es.pdf",
+      "page": 1,
+      "text": "3306 Linden Court, Apt. 2B, Towson, MD 21204",
+      "category": "address",
+      "outcome": "missed"
+    },
+    {
+      "file": "06-pediatric-intake-es.pdf",
+      "page": 1,
+      "text": "Stephen Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "06-pediatric-intake-es.pdf",
+      "page": 1,
+      "text": "SMITH, JOHN",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "06-pediatric-intake-es.pdf",
+      "page": 1,
+      "text": "A. Rao",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "06-pediatric-intake-es.pdf",
+      "page": 2,
+      "text": "E.S.",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "06-pediatric-intake-es.pdf",
+      "page": 2,
+      "text": "Mr. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "06-pediatric-intake-es.pdf",
+      "page": 2,
+      "text": "Mr. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "06-pediatric-intake-es.pdf",
+      "page": 2,
+      "text": "Steve",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "06-pediatric-intake-es.pdf",
+      "page": 2,
+      "text": "Mr. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "06-pediatric-intake-es.pdf",
+      "page": 2,
+      "text": "K. Delaney",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "06-pediatric-intake-es.pdf",
+      "page": 2,
+      "text": "S. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "06-pediatric-intake-es.pdf",
+      "page": 2,
+      "text": "Anand Rao",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "06-pediatric-intake-es.pdf",
+      "page": 2,
+      "text": "E.S.",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "06-pediatric-intake-es.pdf",
+      "page": 2,
+      "text": "Stephen M. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "06-pediatric-intake-es.pdf",
+      "page": 2,
+      "text": "Dr. Rao",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "07-defense-motion-in-limine.pdf",
+      "page": 1,
+      "text": "John A. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "07-defense-motion-in-limine.pdf",
+      "page": 1,
+      "text": "JOHN A. SMITH",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "07-defense-motion-in-limine.pdf",
+      "page": 1,
+      "text": "MAY CHEN",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "07-defense-motion-in-limine.pdf",
+      "page": 1,
+      "text": "John A. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "07-defense-motion-in-limine.pdf",
+      "page": 1,
+      "text": "May Chen",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "07-defense-motion-in-limine.pdf",
+      "page": 1,
+      "text": "Mr. Smith's",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "07-defense-motion-in-limine.pdf",
+      "page": 1,
+      "text": "Mr. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "07-defense-motion-in-limine.pdf",
+      "page": 1,
+      "text": "Ms. Chen",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "07-defense-motion-in-limine.pdf",
+      "page": 1,
+      "text": "1420 Elm Street",
+      "category": "address",
+      "outcome": "missed"
+    },
+    {
+      "file": "07-defense-motion-in-limine.pdf",
+      "page": 1,
+      "text": "Mr. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "07-defense-motion-in-limine.pdf",
+      "page": 1,
+      "text": "Mr. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "07-defense-motion-in-limine.pdf",
+      "page": 1,
+      "text": "E.S.",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "07-defense-motion-in-limine.pdf",
+      "page": 1,
+      "text": "Stephen Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "07-defense-motion-in-limine.pdf",
+      "page": 1,
+      "text": "Elm Street",
+      "category": "address",
+      "outcome": "missed"
+    },
+    {
+      "file": "07-defense-motion-in-limine.pdf",
+      "page": 2,
+      "text": "John A. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "07-defense-motion-in-limine.pdf",
+      "page": 2,
+      "text": "Mr. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "07-defense-motion-in-limine.pdf",
+      "page": 2,
+      "text": "Steve's",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "07-defense-motion-in-limine.pdf",
+      "page": 2,
+      "text": "Ms. Chen's",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "07-defense-motion-in-limine.pdf",
+      "page": 2,
+      "text": "Mr. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "07-defense-motion-in-limine.pdf",
+      "page": 2,
+      "text": "MS. CHEN'S",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "07-defense-motion-in-limine.pdf",
+      "page": 2,
+      "text": "Ms. Chen",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "07-defense-motion-in-limine.pdf",
+      "page": 2,
+      "text": "John",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "07-defense-motion-in-limine.pdf",
+      "page": 2,
+      "text": "Steve",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "07-defense-motion-in-limine.pdf",
+      "page": 2,
+      "text": "Ms. Chen's",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "07-defense-motion-in-limine.pdf",
+      "page": 2,
+      "text": "Mr. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "07-defense-motion-in-limine.pdf",
+      "page": 3,
+      "text": "John A. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "07-defense-motion-in-limine.pdf",
+      "page": 3,
+      "text": "Mr. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "07-defense-motion-in-limine.pdf",
+      "page": 3,
+      "text": "Ms. Chen",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "07-defense-motion-in-limine.pdf",
+      "page": 3,
+      "text": "Mr. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "07-defense-motion-in-limine.pdf",
+      "page": 3,
+      "text": "MS. CHEN",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "07-defense-motion-in-limine.pdf",
+      "page": 3,
+      "text": "Ms. Chen's",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "07-defense-motion-in-limine.pdf",
+      "page": 3,
+      "text": "Ms. Chen",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "07-defense-motion-in-limine.pdf",
+      "page": 3,
+      "text": "William Marsh",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "07-defense-motion-in-limine.pdf",
+      "page": 3,
+      "text": "Rosa Delgado",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "07-defense-motion-in-limine.pdf",
+      "page": 4,
+      "text": "John A. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "07-defense-motion-in-limine.pdf",
+      "page": 4,
+      "text": "Darnell Price",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "07-defense-motion-in-limine.pdf",
+      "page": 4,
+      "text": "Mr. Price",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "07-defense-motion-in-limine.pdf",
+      "page": 4,
+      "text": "Ms. Chen's",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "07-defense-motion-in-limine.pdf",
+      "page": 5,
+      "text": "John A. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "08-witness-statement-may-chen.pdf",
+      "page": 1,
+      "text": "CHEN, MAY",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "08-witness-statement-may-chen.pdf",
+      "page": 1,
+      "text": "1420 Elm Street, Baltimore, MD 21218",
+      "category": "address",
+      "outcome": "missed"
+    },
+    {
+      "file": "08-witness-statement-may-chen.pdf",
+      "page": 1,
+      "text": "May Chen",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "08-witness-statement-may-chen.pdf",
+      "page": 1,
+      "text": "1420 Elm Street",
+      "category": "address",
+      "outcome": "missed"
+    },
+    {
+      "file": "08-witness-statement-may-chen.pdf",
+      "page": 1,
+      "text": "Elm Street",
+      "category": "address",
+      "outcome": "missed"
+    },
+    {
+      "file": "08-witness-statement-may-chen.pdf",
+      "page": 1,
+      "text": "John",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "08-witness-statement-may-chen.pdf",
+      "page": 1,
+      "text": "Mary Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "08-witness-statement-may-chen.pdf",
+      "page": 1,
+      "text": "Steve",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "08-witness-statement-may-chen.pdf",
+      "page": 1,
+      "text": "Mary",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "08-witness-statement-may-chen.pdf",
+      "page": 1,
+      "text": "Emily",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "08-witness-statement-may-chen.pdf",
+      "page": 1,
+      "text": "Mary",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "08-witness-statement-may-chen.pdf",
+      "page": 1,
+      "text": "1418 Elm",
+      "category": "address",
+      "outcome": "missed"
+    },
+    {
+      "file": "08-witness-statement-may-chen.pdf",
+      "page": 1,
+      "text": "Mr. Smith's",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "08-witness-statement-may-chen.pdf",
+      "page": 1,
+      "text": "John",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "08-witness-statement-may-chen.pdf",
+      "page": 1,
+      "text": "Mr. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "08-witness-statement-may-chen.pdf",
+      "page": 1,
+      "text": "Mr. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "08-witness-statement-may-chen.pdf",
+      "page": 1,
+      "text": "John",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "08-witness-statement-may-chen.pdf",
+      "page": 1,
+      "text": "John Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "08-witness-statement-may-chen.pdf",
+      "page": 1,
+      "text": "Steve",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "08-witness-statement-may-chen.pdf",
+      "page": 1,
+      "text": "John Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "08-witness-statement-may-chen.pdf",
+      "page": 1,
+      "text": "John",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "08-witness-statement-may-chen.pdf",
+      "page": 1,
+      "text": "Steve",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "08-witness-statement-may-chen.pdf",
+      "page": 2,
+      "text": "John",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "08-witness-statement-may-chen.pdf",
+      "page": 2,
+      "text": "Mrs. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "08-witness-statement-may-chen.pdf",
+      "page": 2,
+      "text": "May Chen",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "08-witness-statement-may-chen.pdf",
+      "page": 2,
+      "text": "CHEN",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "08-witness-statement-may-chen.pdf",
+      "page": 2,
+      "text": "1418 Elm Street",
+      "category": "address",
+      "outcome": "missed"
+    },
+    {
+      "file": "09-letter-will-marsh.pdf",
+      "page": 1,
+      "text": "William J. Marsh",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "09-letter-will-marsh.pdf",
+      "page": 1,
+      "text": "52 Harbor View Lane",
+      "category": "address",
+      "outcome": "missed"
+    },
+    {
+      "file": "09-letter-will-marsh.pdf",
+      "page": 1,
+      "text": "Dundalk, MD 21222",
+      "category": "address",
+      "outcome": "missed"
+    },
+    {
+      "file": "09-letter-will-marsh.pdf",
+      "page": 1,
+      "text": "John Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "09-letter-will-marsh.pdf",
+      "page": 1,
+      "text": "John",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "09-letter-will-marsh.pdf",
+      "page": 1,
+      "text": "Linda Pruitt",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "09-letter-will-marsh.pdf",
+      "page": 1,
+      "text": "Mr. Smith's",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "09-letter-will-marsh.pdf",
+      "page": 1,
+      "text": "Johnny",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "09-letter-will-marsh.pdf",
+      "page": 1,
+      "text": "Johnny",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "09-letter-will-marsh.pdf",
+      "page": 1,
+      "text": "Carla",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "09-letter-will-marsh.pdf",
+      "page": 1,
+      "text": "Carla Marsh",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "09-letter-will-marsh.pdf",
+      "page": 1,
+      "text": "Darnell",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "09-letter-will-marsh.pdf",
+      "page": 2,
+      "text": "Darnell",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "09-letter-will-marsh.pdf",
+      "page": 2,
+      "text": "Darnell Price",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "09-letter-will-marsh.pdf",
+      "page": 2,
+      "text": "Mr. Price",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "09-letter-will-marsh.pdf",
+      "page": 2,
+      "text": "Steve",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "09-letter-will-marsh.pdf",
+      "page": 2,
+      "text": "Steve Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "09-letter-will-marsh.pdf",
+      "page": 2,
+      "text": "Will Marsh",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "09-letter-will-marsh.pdf",
+      "page": 2,
+      "text": "William J. Marsh",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "10-scheduling-order.pdf",
+      "page": 1,
+      "text": "John A. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "10-scheduling-order.pdf",
+      "page": 1,
+      "text": "JOHN A. SMITH",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "10-scheduling-order.pdf",
+      "page": 1,
+      "text": "John A. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "10-scheduling-order.pdf",
+      "page": 1,
+      "text": "Stephen M. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "10-scheduling-order.pdf",
+      "page": 1,
+      "text": "Mr. Smith",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "10-scheduling-order.pdf",
+      "page": 1,
+      "text": "Darnell Price",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "10-scheduling-order.pdf",
+      "page": 1,
+      "text": "Mr. Price",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "10-scheduling-order.pdf",
+      "page": 1,
+      "text": "E.S.",
+      "category": "person",
+      "outcome": "missed"
+    },
+    {
+      "file": "10-scheduling-order.pdf",
+      "page": 2,
+      "text": "John A. Smith",
+      "category": "person",
+      "outcome": "missed"
+    }
+  ],
+  "falsePositives": [],
+  "warnings": [
+    "Name and address detection failed (google/gemma-4-31b-it:free: Provider returned error). Only Social Security number patterns were checked. Re-run detection to try again."
+  ]
+}

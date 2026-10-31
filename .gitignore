@@ -40,3 +40,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# eval: keep the latest scorecards, ignore raw runs
+eval/results/*
+!eval/results/latest-*.json

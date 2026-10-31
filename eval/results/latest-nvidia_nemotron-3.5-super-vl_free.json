@@ -1,0 +1,204 @@
+{
+  "ranAt": "2026-10-30T19:15:04.042Z",
+  "mode": "full",
+  "model": "nvidia/nemotron-3.5-super-vl:free",
+  "corpus": {
+    "documents": 10,
+    "pages": 46,
+    "redactSpans": 380,
+    "keepSpans": 516,
+    "unlocated": 0
+  },
+  "recall": {
+    "caught": 373,
+    "partial": 5,
+    "missed": 2,
+    "rate": 0.9815789473684211
+  },
+  "falsePositiveRate": 0.003875968992248062,
+  "attribution": {
+    "correct": 51,
+    "total": 54,
+    "wrong": [
+      {
+        "text": "Mr. Smith",
+        "file": "06-pediatric-intake-es.pdf",
+        "page": 2,
+        "expected": "John A. Smith",
+        "got": "nobody"
+      },
+      {
+        "text": "Mr. Smith",
+        "file": "07-defense-motion-in-limine.pdf",
+        "page": 3,
+        "expected": "John A. Smith",
+        "got": "nobody"
+      },
+      {
+        "text": "Mr. Smith",
+        "file": "10-scheduling-order.pdf",
+        "page": 1,
+        "expected": "Stephen M. Smith",
+        "got": "nobody"
+      }
+    ],
+    "rate": 0.9444444444444444
+  },
+  "byCategory": {
+    "redact:person": {
+      "total": 329,
+      "caught": 326,
+      "partial": 3,
+      "flagged": 0
+    },
+    "keep:decoy_number": {
+      "total": 147,
+      "caught": 0,
+      "partial": 0,
+      "flagged": 0
+    },
+    "redact:address": {
+      "total": 33,
+      "caught": 29,
+      "partial": 2,
+      "flagged": 0
+    },
+    "keep:org": {
+      "total": 134,
+      "caught": 0,
+      "partial": 0,
+      "flagged": 0
+    },
+    "keep:official": {
+      "total": 91,
+      "caught": 0,
+      "partial": 0,
+      "flagged": 1
+    },
+    "keep:decoy_word": {
+      "total": 105,
+      "caught": 0,
+      "partial": 0,
+      "flagged": 0
+    },
+    "keep:address": {
+      "total": 26,
+      "caught": 0,
+      "partial": 0,
+      "flagged": 0
+    },
+    "redact:ssn_partial": {
+      "total": 11,
+      "caught": 11,
+      "partial": 0,
+      "flagged": 0
+    },
+    "redact:ssn": {
+      "total": 7,
+      "caught": 7,
+      "partial": 0,
+      "flagged": 0
+    },
+    "keep:citation": {
+      "total": 13,
+      "caught": 0,
+      "partial": 0,
+      "flagged": 1
+    }
+  },
+  "caughtBySource": {
+    "llm": 275,
+    "sweep": 84,
+    "pattern": 14
+  },
+  "extraRedactions": {
+    "count": 3,
+    "samples": [
+      "01-charging-document.pdf p.1: \"Baltimore, Maryland 21218\" (llm)",
+      "08-witness-statement-may-chen.pdf p.2: \"CHEN\" (llm)",
+      "07-defense-motion-in-limine.pdf p.2: \"Smith's\" (sweep)"
+    ]
+  },
+  "workload": {
+    "entities": 53,
+    "ambiguousGroups": 19,
+    "exceptions": 7,
+    "lowConfidence": 1,
+    "decisions": 80,
+    "mentions": 729
+  },
+  "usage": {
+    "inputTokens": 0,
+    "outputTokens": 0,
+    "calls": 0,
+    "costUsd": 0
+  },
+  "costUsd": 0,
+  "seconds": 0.3,
+  "misses": [
+    {
+      "file": "01-charging-document.pdf",
+      "page": 1,
+      "text": "Darnell Price",
+      "category": "person",
+      "outcome": "partial"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 4,
+      "text": "3306 Linden Court, Apartment 2B, Towson, Maryland 21204",
+      "category": "address",
+      "outcome": "partial"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 5,
+      "text": "the Elm Street house",
+      "category": "address",
+      "outcome": "partial"
+    },
+    {
+      "file": "03-deposition-steve-smith.pdf",
+      "page": 8,
+      "text": "Elm",
+      "category": "address",
+      "outcome": "missed"
+    },
+    {
+      "file": "07-defense-motion-in-limine.pdf",
+      "page": 1,
+      "text": "Mr. Smith",
+      "category": "person",
+      "outcome": "partial"
+    },
+    {
+      "file": "09-letter-will-marsh.pdf",
+      "page": 1,
+      "text": "Dundalk, MD 21222",
+      "category": "address",
+      "outcome": "missed"
+    },
+    {
+      "file": "10-scheduling-order.pdf",
+      "page": 1,
+      "text": "Mr. Smith",
+      "category": "person",
+      "outcome": "partial"
+    }
+  ],
+  "falsePositives": [
+    {
+      "file": "07-defense-motion-in-limine.pdf",
+      "page": 2,
+      "text": "Smith's",
+      "category": "citation"
+    },
+    {
+      "file": "08-witness-statement-may-chen.pdf",
+      "page": 2,
+      "text": "CHEN",
+      "category": "official"
+    }
+  ],
+  "warnings": []
+}
