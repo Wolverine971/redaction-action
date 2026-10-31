@@ -13,7 +13,8 @@ import {
   type EntityType,
 } from "@/db/schema";
 import { aliasKey, aliasPattern, findAliases } from "@/lib/detect/aliases";
-import { candidateState, effectiveDecision } from "@/lib/decisions";
+import { effectiveDecision, entityDecision } from "@/lib/decisions";
+import { describeDecision, entityFields, entityHistories, entityState, mentionFields, mentionState, type AuditInsert } from "@/lib/history";
 import { rectsForSpan } from "@/lib/pdf/extract";
 
 export async function listBatches() {
@@ -167,7 +168,11 @@ export async function getReview(batchId: string) {
       aiGuessConfidence: m.aiGuessConfidence,
       aiGuessRationale: m.aiGuessRationale,
       assignmentConfirmed: m.assignmentConfirmed,
+      assignedBy: m.assignedBy,
+      assignedAt: m.assignedAt?.toISOString() ?? null,
       override: m.override,
+      decidedBy: m.decidedBy,
+      decidedAt: m.decidedAt?.toISOString() ?? null,
       before: clean(blockText.slice(Math.max(0, m.start - 90), m.start)),
       after: clean(blockText.slice(m.end, m.end + 90)),
     })),
@@ -189,162 +194,221 @@ export type ReviewAction =
 
 export class ReviewError extends Error {}
 
-/** Applies one reviewer action and records it in the audit log, atomically. */
+/** Applies one reviewer action and records it in the audit log, atomically, with one timestamp for both. */
 export async function applyAction(batchId: string, actor: string, action: ReviewAction) {
   const now = new Date();
   return db.transaction(async (tx) => {
     const entityRows = await tx.select().from(entities).where(eq(entities.batchId, batchId));
     const entityById = new Map(entityRows.map((e) => [e.id, e]));
     const label = (id: string | null) => (id ? (entityById.get(id)?.label ?? "unknown") : "unassigned");
-    const audit = (row: Omit<typeof auditEvents.$inferInsert, "batchId" | "actor">) =>
-      tx.insert(auditEvents).values({ batchId, actor, ...row });
+    const snapshot = (id: string | null) => {
+      const e = id ? entityById.get(id) : undefined;
+      return e ? entityFields(e) : { entityId: id };
+    };
+    const log: Omit<AuditInsert, "batchId" | "actor" | "createdAt">[] = [];
+    const result = await run();
+    for (let i = 0; i < log.length; i += 500) {
+      await tx.insert(auditEvents).values(log.slice(i, i + 500).map((row) => ({ batchId, actor, createdAt: now, ...row })));
+    }
+    return result;
 
-    switch (action.type) {
-      case "setEntity": {
-        const ids = action.entityIds.filter((id) => entityById.has(id));
-        if (ids.length === 0) throw new ReviewError("No such entity");
-        await tx
-          .update(entities)
-          .set({ status: action.status, decidedBy: action.status === "pending" ? null : actor, decidedAt: action.status === "pending" ? null : now })
-          .where(and(eq(entities.batchId, batchId), inArray(entities.id, ids)));
-        for (const id of ids) {
-          const e = entityById.get(id)!;
-          const to = candidateState({ status: action.status });
-          await audit({
-            action: `entity.${to}`,
-            entityId: id,
-            summary:
-              to === "redacted"
-                ? `Redacted ${e.type} "${e.label}"`
-                : to === "kept"
-                  ? `Kept ${e.type} "${e.label}" (left visible)`
-                  : `Returned ${e.type} "${e.label}" to the system default (flagged, redacted)`,
-            details: { from: candidateState(e), to, bulk: ids.length > 1 },
-          });
+    async function run() {
+      switch (action.type) {
+        case "setEntity": {
+          const ids = action.entityIds.filter((id) => entityById.has(id));
+          if (ids.length === 0) throw new ReviewError("No such entity");
+          // Choosing the decision something already has changes nothing, so it doesn't take over who decided it or when.
+          const changing = ids.filter((id) => entityById.get(id)!.status !== action.status);
+          if (changing.length === 0) return { changed: 0 };
+          await tx
+            .update(entities)
+            .set({ status: action.status, decidedBy: action.status === "pending" ? null : actor, decidedAt: action.status === "pending" ? null : now })
+            .where(and(eq(entities.batchId, batchId), inArray(entities.id, changing)));
+          const to = entityState(action.status);
+          for (const id of changing) {
+            const e = entityById.get(id)!;
+            const was = e.status === "pending" ? "" : ` (was ${describeDecision(e)})`;
+            log.push({
+              action: to === "flagged" ? "entity.reset" : `entity.${to}`,
+              ...entityFields(e),
+              fromState: entityState(e.status),
+              toState: to,
+              summary:
+                to === "redacted"
+                  ? `Redacted ${e.type} "${e.label}"${was}`
+                  : to === "kept"
+                    ? `Kept ${e.type} "${e.label}" (left visible)${was}`
+                    : `Returned ${e.type} "${e.label}" to the system default (flagged, redacted)${was}`,
+              details: { bulk: changing.length > 1, previousDecidedBy: e.decidedBy, previousDecidedAt: e.decidedAt?.toISOString() ?? null },
+            });
+          }
+          return { changed: changing.length };
         }
-        return { changed: ids.length };
-      }
-      case "setMention": {
-        const rows = await tx
-          .select()
-          .from(mentions)
-          .where(and(eq(mentions.batchId, batchId), inArray(mentions.id, action.mentionIds)));
-        if (rows.length === 0) throw new ReviewError("No such mention");
-        await tx
-          .update(mentions)
-          .set({ override: action.override, decidedBy: actor, decidedAt: now })
-          .where(inArray(mentions.id, rows.map((r) => r.id)));
-        for (const m of rows) {
-          await audit({
-            action: action.override ? `mention.${action.override}` : "mention.clear",
-            entityId: m.entityId,
-            mentionId: m.id,
-            summary: `${action.override === "redact" ? "Redacted one mention" : action.override === "keep" ? "Kept one mention" : "Cleared the individual decision on"} "${m.text}" (${label(m.entityId)}, p.${m.pageNumber})`,
-            details: { from: m.override, to: action.override, documentId: m.documentId, page: m.pageNumber, bulk: rows.length > 1 },
-          });
-        }
-        return { changed: rows.length };
-      }
-      case "assign":
-      case "confirmGuess": {
-        const rows = await tx
-          .select()
-          .from(mentions)
-          .where(and(eq(mentions.batchId, batchId), inArray(mentions.id, action.mentionIds)));
-        if (rows.length === 0) throw new ReviewError("No such mention");
-        if (action.type === "assign" && !entityById.has(action.entityId)) throw new ReviewError("No such entity");
-        for (const m of rows) {
-          const target = action.type === "assign" ? action.entityId : m.entityId;
-          if (!target) continue; // nothing to confirm on an unresolved mention
+        case "setMention": {
+          const rows = await tx
+            .select()
+            .from(mentions)
+            .where(and(eq(mentions.batchId, batchId), inArray(mentions.id, action.mentionIds)));
+          if (rows.length === 0) throw new ReviewError("No such mention");
+          const changing = rows.filter((m) => m.override !== action.override);
+          if (changing.length === 0) return { changed: 0 };
           await tx
             .update(mentions)
-            .set({ entityId: target, assignmentConfirmed: true, decidedBy: actor, decidedAt: now })
-            .where(eq(mentions.id, m.id));
-          await audit({
-            action: action.type === "assign" && target !== m.entityId ? "mention.reassign" : "mention.confirm",
-            entityId: target,
-            mentionId: m.id,
-            summary:
-              target !== m.entityId
-                ? `Reassigned "${m.text}" (p.${m.pageNumber}) from ${label(m.entityId)} to ${label(target)}`
-                : `Confirmed "${m.text}" (p.${m.pageNumber}) is ${label(target)}`,
-            details: { from: m.entityId, to: target, aiGuessConfidence: m.aiGuessConfidence, bulk: rows.length > 1 },
+            .set({ override: action.override, decidedBy: action.override ? actor : null, decidedAt: action.override ? now : null })
+            .where(inArray(mentions.id, changing.map((r) => r.id)));
+          for (const m of changing) {
+            const was = m.override ? ` (was ${m.override === "keep" ? "kept" : "redacted"} individually by ${m.decidedBy ?? "an unknown reviewer"})` : "";
+            log.push({
+              action: action.override ? `mention.${action.override}` : "mention.clear",
+              ...snapshot(m.entityId),
+              ...mentionFields(m),
+              fromState: mentionState(m.override),
+              toState: mentionState(action.override),
+              summary: `${action.override === "redact" ? "Redacted one mention" : action.override === "keep" ? "Kept one mention" : "Cleared the individual decision on"} "${m.text}" (${label(m.entityId)}, p.${m.pageNumber})${was}`,
+              details: { bulk: changing.length > 1, previousDecidedBy: m.decidedBy, previousDecidedAt: m.decidedAt?.toISOString() ?? null },
+            });
+          }
+          return { changed: changing.length };
+        }
+        case "assign":
+        case "confirmGuess": {
+          const rows = await tx
+            .select()
+            .from(mentions)
+            .where(and(eq(mentions.batchId, batchId), inArray(mentions.id, action.mentionIds)));
+          if (rows.length === 0) throw new ReviewError("No such mention");
+          if (action.type === "assign" && !entityById.has(action.entityId)) throw new ReviewError("No such entity");
+          const byTarget = new Map<string, string[]>();
+          const lookup = (id: string) => entityById.get(id);
+          for (const m of rows) {
+            const target = action.type === "assign" ? action.entityId : m.entityId;
+            if (!target) continue; // nothing to confirm on an unresolved mention
+            if (target === m.entityId && m.assignmentConfirmed) continue; // already confirmed
+            byTarget.set(target, [...(byTarget.get(target) ?? []), m.id]);
+            const before = effectiveDecision(m, lookup);
+            const after = effectiveDecision({ ...m, entityId: target, assignmentConfirmed: true }, lookup);
+            const outcome = before === after ? "" : `; it is now ${after === "redact" ? "redacted" : "visible"}`;
+            log.push({
+              action: target !== m.entityId ? "mention.reassign" : "mention.confirm",
+              ...snapshot(target),
+              ...mentionFields(m),
+              summary:
+                (target !== m.entityId
+                  ? `Reassigned "${m.text}" (p.${m.pageNumber}) from ${label(m.entityId)} to ${label(target)}`
+                  : `Confirmed "${m.text}" (p.${m.pageNumber}) is ${label(target)}`) + outcome,
+              details: {
+                from: m.entityId,
+                fromLabel: m.entityId ? label(m.entityId) : null,
+                to: target,
+                aiGuessConfidence: m.aiGuessConfidence,
+                outcomeBefore: before,
+                outcomeAfter: after,
+                bulk: rows.length > 1,
+              },
+            });
+          }
+          for (const [target, ids] of byTarget) {
+            await tx
+              .update(mentions)
+              .set({ entityId: target, assignmentConfirmed: true, assignedBy: actor, assignedAt: now })
+              .where(inArray(mentions.id, ids));
+          }
+          return { changed: [...byTarget.values()].reduce((n, ids) => n + ids.length, 0) };
+        }
+        case "addEntity": {
+          const query = action.query.trim() || action.label.trim();
+          if (!query) throw new ReviewError("Enter the text to redact");
+          const [entity] = await tx
+            .insert(entities)
+            .values({
+              batchId,
+              type: action.entityType,
+              label: action.label.trim() || query,
+              aliases: [query],
+              aiSuggestion: "redact",
+              aiConfidence: 1,
+              aiRationale: "Added by reviewer",
+              status: "redact",
+              createdBy: actor,
+              decidedBy: actor,
+              decidedAt: now,
+            })
+            .returning();
+          const added = await addMentionsForAlias(tx, batchId, entity.id, query, actor, now);
+          log.push({
+            action: "entity.add",
+            ...entityFields(entity),
+            toState: "redacted",
+            summary: `Added ${entity.type} "${entity.label}" and redacted ${added} matches of "${query}"`,
+            details: { query, added },
           });
+          return { changed: added, entityId: entity.id };
         }
-        return { changed: rows.length };
-      }
-      case "addEntity": {
-        const query = action.query.trim() || action.label.trim();
-        if (!query) throw new ReviewError("Enter the text to redact");
-        const [entity] = await tx
-          .insert(entities)
-          .values({
-            batchId,
-            type: action.entityType,
-            label: action.label.trim() || query,
-            aliases: [query],
-            aiSuggestion: "redact",
-            aiConfidence: 1,
-            aiRationale: "Added by reviewer",
-            status: "redact",
-            createdBy: actor,
-            decidedBy: actor,
-            decidedAt: now,
-          })
-          .returning();
-        const added = await addMentionsForAlias(tx, batchId, entity.id, query, actor, now);
-        await audit({
-          action: "entity.add",
-          entityId: entity.id,
-          summary: `Added ${entity.type} "${entity.label}" and redacted ${added} matches of "${query}"`,
-          details: { query, added },
-        });
-        return { changed: added, entityId: entity.id };
-      }
-      case "addAlias": {
-        const entity = entityById.get(action.entityId);
-        if (!entity) throw new ReviewError("No such entity");
-        const alias = action.alias.trim();
-        if (!alias) throw new ReviewError("Enter a spelling to add");
-        if (!entity.aliases.some((a) => aliasKey(a) === aliasKey(alias))) {
-          await tx.update(entities).set({ aliases: [...entity.aliases, alias] }).where(eq(entities.id, entity.id));
+        case "addAlias": {
+          const entity = entityById.get(action.entityId);
+          if (!entity) throw new ReviewError("No such entity");
+          const alias = action.alias.trim();
+          if (!alias) throw new ReviewError("Enter a spelling to add");
+          if (!entity.aliases.some((a) => aliasKey(a) === aliasKey(alias))) {
+            await tx.update(entities).set({ aliases: [...entity.aliases, alias] }).where(eq(entities.id, entity.id));
+          }
+          const added = await addMentionsForAlias(tx, batchId, entity.id, alias, actor, now);
+          log.push({
+            action: "entity.alias",
+            ...entityFields(entity),
+            summary: `Added spelling "${alias}" to "${entity.label}" (${added} new matches)`,
+            details: { alias, added },
+          });
+          return { changed: added };
         }
-        const added = await addMentionsForAlias(tx, batchId, entity.id, alias, actor, now);
-        await audit({
-          action: "entity.alias",
-          entityId: entity.id,
-          summary: `Added spelling "${alias}" to "${entity.label}" (${added} new matches)`,
-          details: { alias, added },
-        });
-        return { changed: added };
-      }
-      case "merge": {
-        const from = entityById.get(action.fromEntityId);
-        const into = entityById.get(action.intoEntityId);
-        if (!from || !into || from.id === into.id) throw new ReviewError("Pick two different entities");
-        await tx.update(mentions).set({ entityId: into.id }).where(eq(mentions.entityId, from.id));
-        await tx
-          .update(mentions)
-          .set({
-            candidateEntityIds: sql`(select coalesce(jsonb_agg(distinct case when v = ${from.id} then ${into.id} else v end), '[]'::jsonb) from jsonb_array_elements_text(${mentions.candidateEntityIds}) v)`,
-          })
-          .where(and(eq(mentions.batchId, batchId), sql`${mentions.candidateEntityIds} ? ${from.id}`));
-        await tx
-          .update(entities)
-          .set({ aliases: [...new Set([...into.aliases, ...from.aliases, from.label])] })
-          .where(eq(entities.id, into.id));
-        await tx.delete(entities).where(eq(entities.id, from.id));
-        await audit({
-          action: "entity.merge",
-          entityId: into.id,
-          summary: `Merged "${from.label}" into "${into.label}"`,
-          details: { from: from.id, fromLabel: from.label, into: into.id },
-        });
-        return { changed: 1 };
+        case "merge": {
+          const from = entityById.get(action.fromEntityId);
+          const into = entityById.get(action.intoEntityId);
+          if (!from || !into || from.id === into.id) throw new ReviewError("Pick two different entities");
+          // Mentions that followed the merged-away entity now follow the other one; record whose outcome flips.
+          const moved = await tx.select().from(mentions).where(eq(mentions.entityId, from.id));
+          const flipped = moved.filter((m) => !m.override && entityDecision(from) !== entityDecision(into)).length;
+          await tx.update(mentions).set({ entityId: into.id }).where(eq(mentions.entityId, from.id));
+          await tx
+            .update(mentions)
+            .set({
+              candidateEntityIds: sql`(select coalesce(jsonb_agg(distinct case when v = ${from.id} then ${into.id} else v end), '[]'::jsonb) from jsonb_array_elements_text(${mentions.candidateEntityIds}) v)`,
+            })
+            .where(and(eq(mentions.batchId, batchId), sql`${mentions.candidateEntityIds} ? ${from.id}`));
+          await tx
+            .update(entities)
+            .set({ aliases: [...new Set([...into.aliases, ...from.aliases, from.label])] })
+            .where(eq(entities.id, into.id));
+          await tx.delete(entities).where(eq(entities.id, from.id));
+          const flips = flipped
+            ? `; ${plural(flipped, "mention")} went from ${entityDecision(from) === "keep" ? "visible to redacted" : "redacted to visible"}`
+            : "";
+          log.push({
+            action: "entity.merge",
+            ...entityFields(into),
+            fromState: entityState(from.status),
+            toState: entityState(into.status),
+            summary: `Merged "${from.label}" (${describeDecision(from)}) into "${into.label}" (${describeDecision(into)}): ${plural(moved.length, "mention")} now follow "${into.label}"${flips}`,
+            details: {
+              from: from.id,
+              fromLabel: from.label,
+              fromType: from.type,
+              fromStatus: from.status,
+              fromDecidedBy: from.decidedBy,
+              fromDecidedAt: from.decidedAt?.toISOString() ?? null,
+              into: into.id,
+              mentionsMoved: moved.length,
+              outcomeChanged: flipped,
+            },
+          });
+          return { changed: 1 };
+        }
       }
     }
   });
 }
+
+const plural = (n: number, one: string, many = `${one}s`) => `${n} ${n === 1 ? one : many}`;
 
 type Tx = Parameters<Parameters<typeof db.transaction>[0]>[0];
 
@@ -379,8 +443,8 @@ async function addMentionsForAlias(tx: Tx, batchId: string, entityId: string, al
         source: "manual",
         confidence: 1,
         assignmentConfirmed: true,
-        decidedBy: actor,
-        decidedAt: now,
+        assignedBy: actor,
+        assignedAt: now,
       });
     }
   }
@@ -425,6 +489,11 @@ export async function searchBatch(batchId: string, query: string) {
   return results;
 }
 
+/** One entity's history, oldest first: flags, decisions, per-mention exceptions, merges into it, and re-runs. */
+export async function getEntityHistory(batchId: string, entityId: string) {
+  return entityHistories(await getAudit(batchId), new Set([entityId])).histories.get(entityId) ?? [];
+}
+
 export async function getAudit(batchId: string) {
   return db.select().from(auditEvents).where(eq(auditEvents.batchId, batchId)).orderBy(desc(auditEvents.id));
 }
@@ -435,10 +504,29 @@ const csvCell = (v: unknown) => {
 };
 export const toCsv = (rows: unknown[][]) => rows.map((r) => r.map(csvCell).join(",")).join("\n") + "\n";
 
+/** The full audit trail, one row per event, oldest first. Entity and place columns are as they were at the time. */
 export async function auditCsv(batchId: string) {
-  const rows = await getAudit(batchId);
+  const rows = (await getAudit(batchId)).reverse();
+  const docs = await db.select({ id: documents.id, filename: documents.filename }).from(documents).where(eq(documents.batchId, batchId));
+  const filename = new Map(docs.map((d) => [d.id, d.filename]));
   return toCsv([
-    ["id", "timestamp", "reviewer", "action", "summary", "entity_id", "mention_id", "details"],
-    ...rows.map((r) => [r.id, r.createdAt, r.actor, r.action, r.summary, r.entityId, r.mentionId, JSON.stringify(r.details)]),
+    ["id", "timestamp", "reviewer", "action", "entity", "entity_type", "mention_text", "document", "page", "from", "to", "summary", "entity_id", "mention_id", "details"],
+    ...rows.map((r) => [
+      r.id,
+      r.createdAt,
+      r.actor,
+      r.action,
+      r.entityLabel,
+      r.entityType,
+      r.mentionText,
+      r.documentId ? (filename.get(r.documentId) ?? r.documentId) : null,
+      r.pageNumber,
+      r.fromState,
+      r.toState,
+      r.summary,
+      r.entityId,
+      r.mentionId,
+      JSON.stringify(r.details),
+    ]),
   ]);
 }

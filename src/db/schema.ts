@@ -148,6 +148,10 @@ export const mentions = pgTable(
     aiGuessConfidence: real("ai_guess_confidence"),
     aiGuessRationale: text("ai_guess_rationale"),
     assignmentConfirmed: boolean("assignment_confirmed").notNull().default(false),
+    /** Who confirmed which entity this mention is, and when. */
+    assignedBy: text("assigned_by"),
+    assignedAt: timestamp("assigned_at", { withTimezone: true }),
+    /** A per-mention exception. `decidedBy`/`decidedAt` say who set the current one; null when there is none. */
     override: text("override").$type<Decision>(),
     decidedBy: text("decided_by"),
     decidedAt: timestamp("decided_at", { withTimezone: true }),
@@ -159,7 +163,21 @@ export const mentions = pgTable(
   ],
 );
 
-/** Append-only record of every reviewer decision and export. */
+/**
+ * Where an entity or mention stood before and after an event.
+ *   flagged  — found by the system, redacted by default (entities)
+ *   redacted — a person chose to redact it
+ *   kept     — a person chose to leave it visible
+ *   follows  — no per-mention exception: the mention follows its entity (mentions)
+ */
+export type HistoryState = "flagged" | "redacted" | "kept" | "follows";
+
+/**
+ * Append-only record of every flag, decision, merge, re-run, and export. The database refuses
+ * UPDATE and DELETE on this table (see drizzle/0004); rows go away only with their whole batch.
+ * Entity and mention fields are copies taken at the time, so the history still reads correctly
+ * after the entity is merged away or a re-run replaces it.
+ */
 export const auditEvents = pgTable(
   "audit_events",
   {
@@ -170,10 +188,17 @@ export const auditEvents = pgTable(
     actor: text("actor").notNull(),
     action: text("action").notNull(),
     entityId: uuid("entity_id"),
+    entityLabel: text("entity_label"),
+    entityType: text("entity_type").$type<EntityType>(),
     mentionId: uuid("mention_id"),
+    mentionText: text("mention_text"),
+    documentId: uuid("document_id"),
+    pageNumber: integer("page_number"),
+    fromState: text("from_state").$type<HistoryState>(),
+    toState: text("to_state").$type<HistoryState>(),
     summary: text("summary").notNull(),
     details: jsonb("details").$type<Record<string, unknown>>().notNull().default({}),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   },
-  (t) => [index("audit_batch_idx").on(t.batchId, t.createdAt)],
+  (t) => [index("audit_batch_idx").on(t.batchId, t.createdAt), index("audit_entity_idx").on(t.entityId)],
 );

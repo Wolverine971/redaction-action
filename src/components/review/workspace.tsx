@@ -4,10 +4,10 @@ import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { Decision, EntityStatus, EntityType } from "@/db/schema";
 import type { ReviewAction } from "@/lib/review";
-import { candidateState } from "@/lib/decisions";
+import { candidateState, countOfType } from "@/lib/decisions";
 import { SharedNames } from "./attention";
 import { CandidateOverview, GroupHeader, type StateFilter } from "./candidate-tree";
-import { EntityRow } from "./entity-list";
+import { EntityRow, SavedVersion } from "./entity-list";
 import { FindPanel } from "./find-panel";
 import { derive, sortEntities, TYPE_LABEL, TYPE_ORDER, type ReviewData, type ReviewMention } from "./model";
 import { PageViewer, type ViewerTarget } from "./page-viewer";
@@ -29,6 +29,7 @@ export function ReviewWorkspace({ initial }: { initial: ReviewData }) {
   // A decision made before the reviewer gave their name; it runs once they do.
   const [queued, setQueued] = useState<null | { action: ReviewAction; optimistic?: (d: ReviewData) => ReviewData; message?: string }>(null);
   const [warningDismissed, setWarningDismissed] = useState(false);
+  const [saved, setSaved] = useState(0);
   const listRef = useRef<HTMLDivElement>(null);
 
   // Which candidates a filter shows is decided when the filter is picked, then held, so a row doesn't
@@ -91,6 +92,7 @@ export function ReviewWorkspace({ initial }: { initial: ReviewData }) {
         return;
       }
       if (!optimistic) await refetch();
+      setSaved((n) => n + 1);
       if (message) flash(message);
     },
     [data.batch.id, refetch],
@@ -105,7 +107,7 @@ export function ReviewWorkspace({ initial }: { initial: ReviewData }) {
         (d) => ({
           ...d,
           entities: d.entities.map((e) =>
-            ids.includes(e.id)
+            ids.includes(e.id) && e.status !== status
               ? { ...e, status, decidedBy: status === "pending" ? null : reviewer, decidedAt: status === "pending" ? null : decidedAt }
               : e,
           ),
@@ -126,11 +128,18 @@ export function ReviewWorkspace({ initial }: { initial: ReviewData }) {
     [setEntity],
   );
   const setMention = useCallback(
-    (ids: string[], override: Decision | null) =>
-      act({ type: "setMention", mentionIds: ids, override }, (d) => ({
+    (ids: string[], override: Decision | null) => {
+      const reviewer = readReviewer();
+      const decidedAt = new Date().toISOString();
+      return act({ type: "setMention", mentionIds: ids, override }, (d) => ({
         ...d,
-        mentions: d.mentions.map((m) => (ids.includes(m.id) ? { ...m, override } : m)),
-      })),
+        mentions: d.mentions.map((m) =>
+          ids.includes(m.id) && m.override !== override
+            ? { ...m, override, decidedBy: override ? reviewer : null, decidedAt: override ? decidedAt : null }
+            : m,
+        ),
+      }));
+    },
     [act],
   );
   const assign = useCallback(
@@ -139,7 +148,9 @@ export function ReviewWorkspace({ initial }: { initial: ReviewData }) {
         { type: "assign", mentionIds: ids, entityId },
         (d) => ({
           ...d,
-          mentions: d.mentions.map((m) => (ids.includes(m.id) ? { ...m, entityId, assignmentConfirmed: true } : m)),
+          mentions: d.mentions.map((m) =>
+            ids.includes(m.id) ? { ...m, entityId, assignmentConfirmed: true, assignedBy: readReviewer(), assignedAt: new Date().toISOString() } : m,
+          ),
         }),
         `Assigned ${ids.length} to ${data.entities.find((e) => e.id === entityId)?.label}`,
       ),
@@ -149,7 +160,14 @@ export function ReviewWorkspace({ initial }: { initial: ReviewData }) {
     (ids: string[]) =>
       act(
         { type: "confirmGuess", mentionIds: ids },
-        (d) => ({ ...d, mentions: d.mentions.map((m) => (ids.includes(m.id) && m.entityId ? { ...m, assignmentConfirmed: true } : m)) }),
+        (d) => ({
+          ...d,
+          mentions: d.mentions.map((m) =>
+            ids.includes(m.id) && m.entityId && !m.assignmentConfirmed
+              ? { ...m, assignmentConfirmed: true, assignedBy: readReviewer(), assignedAt: new Date().toISOString() }
+              : m,
+          ),
+        }),
         `Confirmed ${ids.length}`,
       ),
     [act],
@@ -238,7 +256,7 @@ export function ReviewWorkspace({ initial }: { initial: ReviewData }) {
       setAskName(() => rerun);
       return;
     }
-    if (!window.confirm("Re-running detection replaces every suggestion and clears decisions made so far. Continue?")) return;
+    if (!window.confirm("Re-running detection replaces the system's suggestions. Decisions you've made carry over to anything it finds again, and anything you decided stays even if it isn't found. Continue?")) return;
     await fetch(`/api/batches/${data.batch.id}/reprocess`, { method: "POST" });
     window.location.reload();
   }
@@ -247,6 +265,7 @@ export function ReviewWorkspace({ initial }: { initial: ReviewData }) {
   const decidedByYou = stats.redacted + stats.kept;
 
   return (
+    <SavedVersion.Provider value={saved}>
     <div className="flex h-dvh flex-col">
       <header className="flex flex-wrap items-center gap-x-6 gap-y-2 border-b border-line bg-paper px-5 py-3">
         <div className="min-w-0">
@@ -401,7 +420,18 @@ export function ReviewWorkspace({ initial }: { initial: ReviewData }) {
           onAddAlias={(entityId, alias) => act({ type: "addAlias", entityId, alias }, undefined, `Added “${alias}”`)}
         />
       )}
-      {exporting && <ExportDialog data={data} derived={derived} onClose={() => setExporting(false)} onNeedName={(retry) => setAskName(() => retry)} />}
+      {exporting && (
+        <ExportDialog
+          data={data}
+          derived={derived}
+          onClose={() => setExporting(false)}
+          onNeedName={(retry) => setAskName(() => retry)}
+          onReviewUntouched={() => {
+            setFilter("flagged");
+            setExporting(false);
+          }}
+        />
+      )}
       {(askName || queued) && (
         <ReviewerName
           prompt
@@ -428,6 +458,7 @@ export function ReviewWorkspace({ initial }: { initial: ReviewData }) {
         </div>
       )}
     </div>
+    </SavedVersion.Provider>
   );
 }
 
@@ -436,15 +467,23 @@ function ExportDialog({
   derived,
   onClose,
   onNeedName,
+  onReviewUntouched,
 }: {
   data: ReviewData;
   derived: ReturnType<typeof derive>;
   onClose: () => void;
   onNeedName: (retry: () => void) => void;
+  onReviewUntouched: () => void;
 }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { flagged, kept } = derived.stats;
+  const { flagged, kept, redacted } = derived.stats;
+  // Entities nobody marked Redact or Keep, by type, with how many places each group covers.
+  const untouched = TYPE_ORDER.map((type) => {
+    const list = data.entities.filter((e) => e.type === type && e.status === "pending");
+    const mentions = list.reduce((n, e) => n + (derived.mentionsByEntity.get(e.id) ?? []).filter((m) => m.entityId === e.id).length, 0);
+    return { type, entities: list.length, mentions };
+  }).filter((g) => g.entities > 0);
   const unsure = derived.ambiguousGroups.reduce((n, g) => n + g.mentions.length, 0);
   const docsWithRedactions = new Set(data.mentions.filter((m) => derived.decision.get(m.id) === "redact").map((m) => m.documentId)).size;
 
@@ -480,15 +519,37 @@ function ExportDialog({
           {derived.stats.redactMentions} mentions in {docsWithRedactions} of {data.documents.length} documents will be permanently removed from the
           PDFs — not just covered. We re-read every page afterwards to confirm nothing is left under any box.
         </p>
-        <div className="mt-4 flex flex-col gap-1 rounded-lg bg-background p-3 text-sm">
+        {flagged > 0 && (
+          <div role="alert" className="mt-4 rounded-lg border border-amber-300 bg-amber-50 p-3 text-sm text-amber-950">
+            <p className="font-semibold">
+              {flagged} {flagged === 1 ? "entity hasn't" : "entities haven't"} been reviewed by a person
+            </p>
+            <p className="mt-0.5">
+              Nobody marked {flagged === 1 ? "it" : "these"} Redact or Keep. Every entity that isn&apos;t touched will be redacted in the exported
+              documents.
+            </p>
+            <ul className="mt-2 grid grid-cols-2 gap-x-4 gap-y-1">
+              {untouched.map((g) => (
+                <li key={g.type} className="flex flex-col">
+                  <span className="font-semibold tabular-nums">{countOfType(g.type, g.entities)}</span>
+                  <span className="text-xs text-amber-800">
+                    {g.mentions} mention{g.mentions === 1 ? "" : "s"}
+                  </span>
+                </li>
+              ))}
+            </ul>
+            <button onClick={onReviewUntouched} className="mt-2 text-xs font-medium underline underline-offset-2 hover:text-amber-800">
+              Review them first
+            </button>
+          </div>
+        )}
+        <div className="mt-3 flex flex-col gap-1 rounded-lg bg-background p-3 text-sm">
           <p>
             <span className="font-medium">{kept}</span> kept by you will stay visible.
           </p>
-          {flagged > 0 && (
-            <p>
-              <span className="font-medium">{flagged}</span> system-flagged item{flagged === 1 ? "" : "s"} you haven&apos;t touched will be redacted by default.
-            </p>
-          )}
+          <p>
+            <span className="font-medium">{redacted}</span> redacted by you.
+          </p>
           {unsure > 0 && <p className="text-amber-800">{unsure} shared-name mentions you haven&apos;t confirmed will be redacted to be safe.</p>}
         </div>
         <div className="mt-4 flex flex-col gap-1.5 text-xs text-muted">
@@ -497,7 +558,7 @@ function ExportDialog({
             Safe to send.
           </p>
           <p>
-            <span className="font-medium text-foreground">internal/</span> The redaction report (PDF), a decisions spreadsheet, and the audit trail.
+            <span className="font-medium text-foreground">internal/</span> The redaction report (PDF) with each entity&apos;s history, spreadsheets of decisions and of every place each entity appears, and the audit trail.
             These name what was redacted: keep them in your office.
           </p>
           <p>The export is recorded in the audit trail.</p>
@@ -508,7 +569,7 @@ function ExportDialog({
             Cancel
           </button>
           <button disabled={busy} onClick={run} className="rounded-lg bg-ink px-4 py-1.5 text-sm font-medium text-white disabled:opacity-50">
-            {busy ? "Redacting…" : "Download"}
+            {busy ? "Redacting…" : flagged > 0 ? "Redact untouched & download" : "Download"}
           </button>
         </div>
       </div>

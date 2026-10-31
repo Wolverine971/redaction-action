@@ -22,6 +22,20 @@
       "when": 1793383467933,
       "tag": "0002_early_catseye",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1793481374145,
+      "tag": "0003_odd_alex_power",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1793481391070,
+      "tag": "0004_audit_append_only",
+      "breakpoints": true
     }
   ]
 }

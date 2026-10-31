@@ -1,10 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import type { Decision, EntityStatus } from "@/db/schema";
+import type { HistoryEvent } from "@/lib/history";
 import { candidateState, decisionReason } from "@/lib/decisions";
 import { STATE_LABEL } from "@/lib/report-types";
 import { type Derived, type ReviewData, type ReviewEntity, type ReviewMention } from "./model";
+
+/** Goes up by one each time a decision is saved, so open histories know to reload. */
+export const SavedVersion = createContext(0);
 
 export interface EntityHandlers {
   setEntity: (ids: string[], status: EntityStatus) => void;
@@ -176,6 +180,7 @@ function EntityDetail({
           </ul>
         </div>
       ))}
+      <EntityHistory batchId={data.batch.id} entityId={entity.id} />
       <div className="flex flex-wrap gap-2 border-t border-line pt-3 text-xs">
         <form
           className="flex gap-1"
@@ -223,6 +228,45 @@ function EntityDetail({
   );
 }
 
+/** Who decided what about this entity, and when, newest first. Loads when the entity is opened. */
+function EntityHistory({ batchId, entityId }: { batchId: string; entityId: string }) {
+  const saved = useContext(SavedVersion);
+  const [events, setEvents] = useState<HistoryEvent[] | null>(null);
+  const [all, setAll] = useState(false);
+  useEffect(() => {
+    let live = true;
+    fetch(`/api/batches/${batchId}/history?entity=${entityId}`, { cache: "no-store" })
+      .then((r) => (r.ok ? r.json() : { events: [] }))
+      .then((json: { events: HistoryEvent[] }) => live && setEvents(json.events))
+      .catch(() => live && setEvents([]));
+    return () => {
+      live = false;
+    };
+  }, [batchId, entityId, saved]);
+  if (!events) return <p className="border-t border-line pt-3 text-xs text-muted">Loading history…</p>;
+  const newest = [...events].reverse();
+  const shown = all ? newest : newest.slice(0, 4);
+  return (
+    <div className="border-t border-line pt-3">
+      <p className="mb-1 text-xs font-medium text-muted">History</p>
+      <ol className="flex flex-col gap-1 text-xs">
+        {shown.map((e) => (
+          <li key={e.id} className="flex gap-2">
+            <span className="w-28 shrink-0 tabular-nums text-muted">{shortTime(e.at)}</span>
+            <span className={`w-20 shrink-0 truncate ${e.actor === "system" ? "text-muted" : "font-medium"}`}>{e.actor === "system" ? "System" : e.actor}</span>
+            <span className="min-w-0 flex-1">{e.summary}</span>
+          </li>
+        ))}
+      </ol>
+      {newest.length > shown.length && (
+        <button className="mt-1 text-xs text-muted underline hover:text-foreground" onClick={() => setAll(true)}>
+          Show all {newest.length}
+        </button>
+      )}
+    </div>
+  );
+}
+
 export function MentionLine({
   mention: m,
   derived,
@@ -261,8 +305,11 @@ export function MentionLine({
       {showEntity && entity && <span className="max-w-32 shrink-0 truncate text-xs text-muted">{entity.label}</span>}
       {foreign && <span className="shrink-0 text-xs text-amber-700">unconfirmed</span>}
       {m.override && (
-        <span className="shrink-0 rounded bg-background px-1.5 text-xs text-muted" title={reason}>
-          set individually
+        <span
+          className="shrink-0 rounded bg-background px-1.5 text-xs text-muted"
+          title={`${reason}${m.decidedBy ? ` · ${m.decidedBy}` : ""}${m.decidedAt ? ` · ${shortTime(m.decidedAt)}` : ""}`}
+        >
+          set individually{m.decidedBy ? ` · ${m.decidedBy}` : ""}
         </span>
       )}
       <div className="flex shrink-0 gap-1 text-xs opacity-60 group-hover:opacity-100">

@@ -1,4 +1,4 @@
-import type { Decision, EntityStatus } from "@/db/schema";
+import type { Decision, EntityStatus, EntityType } from "@/db/schema";
 import type { CandidateState } from "@/lib/report-types";
 
 /**
@@ -55,3 +55,27 @@ export function decisionReason(m: DecisionMention, entityById: (id: string) => D
   if (!entity) return "Unassigned — redacted to be safe";
   return { flagged: "System flagged — redacted by default", redacted: "You redacted this", kept: "You kept this" }[candidateState(entity)];
 }
+
+const TYPE_WORDS: Record<EntityType, [string, string]> = {
+  person: ["person", "people"],
+  org: ["organization", "organizations"],
+  address: ["address", "addresses"],
+  ssn: ["SSN", "SSNs"],
+};
+const TYPES: EntityType[] = ["person", "org", "address", "ssn"];
+
+/** "1 person", "16 people", "3 SSNs". */
+export const countOfType = (type: EntityType, n: number) => `${n} ${TYPE_WORDS[type][n === 1 ? 0 : 1]}`;
+
+/** Entities no person has marked Redact or Keep, counted by type. The export redacts all of them. */
+export function untouchedByType(entities: { type: EntityType; status: EntityStatus }[]) {
+  const counts: Record<EntityType, number> = { person: 0, org: 0, address: 0, ssn: 0 };
+  for (const e of entities) if (e.status === "pending") counts[e.type]++;
+  return counts;
+}
+
+/** "16 people, 8 organizations, 3 SSNs" — types with none are left out. */
+export const describeTypeCounts = (counts: Record<EntityType, number>) =>
+  TYPES.filter((t) => counts[t] > 0)
+    .map((t) => countOfType(t, counts[t]))
+    .join(", ");

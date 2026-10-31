@@ -9,7 +9,7 @@ export function ReportDownloads({ batchId }: { batchId: string }) {
   const [busy, setBusy] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  async function download(kind: "pdf" | "csv" | "audit") {
+  async function download(kind: "pdf" | "csv" | "places" | "audit") {
     if (!readReviewer()) {
       setAsking(() => () => download(kind));
       return;
@@ -41,6 +41,9 @@ export function ReportDownloads({ batchId }: { batchId: string }) {
         </button>
         <button onClick={() => download("csv")} disabled={!!busy} className="rounded-lg border border-line bg-paper px-3 py-1.5 font-medium hover:bg-background disabled:opacity-50">
           Decisions (CSV)
+        </button>
+        <button onClick={() => download("places")} disabled={!!busy} className="rounded-lg border border-line bg-paper px-3 py-1.5 font-medium hover:bg-background disabled:opacity-50">
+          Every place (CSV)
         </button>
         <button onClick={() => download("audit")} disabled={!!busy} className="rounded-lg border border-line bg-paper px-3 py-1.5 font-medium hover:bg-background disabled:opacity-50">
           Audit trail (CSV)

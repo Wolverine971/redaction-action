@@ -15,7 +15,7 @@ Upload a batch of related PDFs. The app finds every name, home address, and Soci
 3. **Review** on one screen: a list grouped by People / Addresses / SSNs / Organizations on the left, and the page with highlight boxes on the right.
 4. **Export** a zip with two folders:
    - `share/`: the redacted PDFs, a redaction log (page, category, and box position; never the redacted text, so it's safe to send along), and a verification report
-   - `internal/`: the redaction report (PDF), a decisions spreadsheet, and the audit trail. These name what was redacted, so they stay in the office.
+   - `internal/`: the redaction report (PDF) with each entity's history, a decisions spreadsheet, a spreadsheet of every place each entity appears (redacted or visible, and why), and the audit trail. These name what was redacted, so they stay in the office.
 
 ## How it handles the assignment's key challenges
 
@@ -26,7 +26,7 @@ Upload a batch of related PDFs. The app finds every name, home address, and Soci
 | **Volume** | Decisions are made per *person*, not per mention. "John Smith" covers all 42 of his mentions across 8 files. Shared-name mentions are grouped ("Mr. Smith × 80 → Steve Smith, 93%: Confirm all"). There's keyboard review (`↑ ↓ r k u n p`), plus redact-all and keep-all for each group. |
 | **Multiple files** | A batch shares one list of people, so a decision about John applies in every document. The page viewer steps through a person's mentions across files ("Mention 3 of 42"). |
 | **Context** | A reviewer can redact or keep any single mention, overriding the decision for that person. |
-| **Audit trail** | Every decision, assignment, merge, and export is recorded with the reviewer's name and time. The log is append-only and downloadable as CSV. |
+| **Audit trail** | Every flag, decision, assignment, merge, re-run, and export is recorded with the reviewer's name and time. Overwriting a decision keeps the old one on record. The database refuses edits and deletes to the log. The report shows each entity's history and every place it appears, redacted or visible. See [Decision history](#decision-history). |
 
 ### Decision rules
 
@@ -35,6 +35,25 @@ These are the same rules for the screen and the export, in `src/lib/decisions.ts
 1. A reviewer's per-mention decision wins.
 2. An unconfirmed shared-name mention is redacted if *any* person it might be is redacted.
 3. Otherwise the mention follows its person: kept only if a reviewer chose to keep that person.
+
+### Decision history
+
+Every change is a row in `audit_events`, written in the same transaction as the change and stamped with the same time. Each row saves a copy of the entity's name and type, the mention's text and page, and the state before and after (`flagged`, `redacted`, `kept`, or `follows` for a mention with no exception of its own). The history still reads correctly after a merge or re-run removes the entity. A Postgres trigger rejects `UPDATE`, `DELETE`, and `TRUNCATE` on the table. Rows go away only when their whole batch is deleted.
+
+- **Overwrites stay on record.** "Redacted person "John Smith" (was kept by Priya)". Choosing the decision something already has is a no-op, so it doesn't take credit from whoever made it.
+- **Who set a mention's exception** (`decided_by`) is kept apart from **who confirmed which person it is** (`assigned_by`).
+- **Merges** record the merged-away entity's decision and how many mentions flipped between visible and redacted. Its history continues under the entity it was merged into.
+- **The report page** (`/batches/[id]/audit`) lists every entity with its latest status. Open one to see its history, newest first, and every place it appears. When some places are visible and others redacted, they're split into Visible and Redacted, and each place says why and who set it. The review screen shows the same history when you expand an entity.
+
+### Re-running detection keeps reviewers' work
+
+Re-running detection replaces the system's suggestions, not people's decisions (`src/lib/carry-over.ts`). Earlier results stay in place until the new ones are saved, so a failed re-run loses nothing.
+
+- An entity found again keeps its id, its decision, and who made it and when. It's matched by type, then by name or a known spelling.
+- A mention found at the same place keeps its id, any per-mention exception, and any confirmed assignment.
+- Anything a person decided, confirmed, or added by hand stays even if the new run doesn't find it.
+- A merge a person made is re-applied when the new run lists the two separately again.
+- Only entities nobody reviewed can disappear. Each outcome is logged: found again, new, kept from before, no longer found, and any individual decision that couldn't be placed in the new results.
 
 ### Export safety
 
@@ -111,6 +130,8 @@ src/lib/detect/         Patterns, name variants and sweep, OpenRouter calls, the
 src/lib/decisions.ts    How a mention ends up redacted or kept (shared by UI and export)
 src/lib/process.ts      Runs detection for a batch and saves results
 src/lib/review.ts       Review data, reviewer actions + audit log, search, export
+src/lib/history.ts      Reads the audit log back as each entity's and each mention's history
+src/lib/carry-over.ts   Matches a re-run's results to the earlier ones so decisions carry over
 src/components/review/  The review screen
 src/app/api/            Upload, actions, search, page images, export, audit CSV
 scripts/eval.mts        Catch-rate score
